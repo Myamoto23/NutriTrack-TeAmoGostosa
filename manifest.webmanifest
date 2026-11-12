@@ -1,0 +1,16 @@
+{
+  "name": "NutriTrack — Diário alimentar",
+  "short_name": "NutriTrack",
+  "description": "Regista calorias, refeições, passos e acompanha a tua evolução.",
+  "lang": "pt-PT",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f7f8f3",
+  "theme_color": "#183d30",
+  "icons": [
+    {"src":"icon.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"icon.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+  ]
+}
