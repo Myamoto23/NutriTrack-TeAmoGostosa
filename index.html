@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#f28a68">
+  <meta name="theme-color" content="#fff1e5">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="NutriTrack">
@@ -28,7 +28,7 @@
     .search{width:100%;border:1px solid var(--line);border-radius:14px;background:#fff;padding:13px 14px;font-size:13px;color:var(--ink);margin:8px 0 12px}.food-list{display:grid;gap:8px}.food-card{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px 13px}.food-name{font-size:13px;font-weight:750}.food-meta{font-size:10px;color:var(--muted);margin-top:3px}.food-kcal{font-size:13px;font-weight:850;color:var(--forest2);white-space:nowrap}.food-actions{display:flex;gap:6px;margin-left:4px}.empty-state{text-align:center;padding:28px 15px;color:var(--muted);font-size:12px}.empty-icon{font-size:28px;margin-bottom:8px}
     .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.stats-card{background:#fff;border:1px solid var(--line);border-radius:17px;padding:14px}.stats-card span{font-size:10px;color:var(--muted)}.stats-card strong{display:block;font-size:22px;letter-spacing:-.6px;margin-top:7px}.stats-card small{font-size:10px;color:var(--muted)}.chart-card{margin-top:12px}.chart-title{font-size:13px;font-weight:800}.chart-sub{font-size:10px;color:var(--muted);margin-top:3px}.bars{height:145px;display:grid;grid-template-columns:repeat(7,1fr);align-items:end;gap:9px;padding-top:18px}.bar-wrap{height:100%;display:flex;flex-direction:column;justify-content:end;align-items:center;gap:6px}.bar{width:100%;max-width:25px;background:#dce8d1;border-radius:8px 8px 4px 4px;min-height:3px;position:relative}.bar.current{background:var(--forest)}.bar.over{background:#d98b7e}.bar-label{font-size:9px;color:var(--muted)}.bar-value{font-size:8px;color:#738078}.goal-row{display:flex;justify-content:space-between;align-items:center;margin-top:13px;padding-top:12px;border-top:1px solid var(--line);font-size:11px}.goal-row button{border:0;background:var(--leaf2);color:var(--forest);font-size:10px;font-weight:800;border-radius:9px;padding:7px 9px}
     .modal-backdrop{position:fixed;inset:0;background:rgba(13,32,23,.42);z-index:10;display:none;align-items:flex-end;justify-content:center;padding:12px}.modal-backdrop.open{display:flex}.modal{background:var(--cream);width:100%;max-width:500px;border-radius:25px 25px 18px 18px;padding:19px 18px calc(19px + env(safe-area-inset-bottom));max-height:90vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:slide .2s ease}@keyframes slide{from{transform:translateY(20px);opacity:.7}to{transform:none;opacity:1}}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.modal-head h3{margin:0;font-size:18px}.close-btn{border:0;background:#e9eee6;border-radius:10px;width:31px;height:31px;font-size:17px;color:#536258}.field{display:grid;gap:6px;margin:12px 0}.field label{font-size:11px;font-weight:750;color:#58655c}.field input,.field select{width:100%;border:1px solid #dfe6dc;border-radius:12px;padding:13px;background:#fff;color:var(--ink);font-size:13px}.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.calc-preview{border-radius:15px;background:var(--leaf2);padding:13px;margin:13px 0;display:flex;align-items:center;justify-content:space-between}.calc-preview span{font-size:11px;color:#60715f}.calc-preview strong{font-size:22px;color:var(--forest)}.primary-btn{width:100%;border:0;background:var(--forest);color:#fff;font-weight:800;border-radius:14px;padding:14px;font-size:13px;margin-top:6px}.secondary-btn{width:100%;border:1px solid var(--line);background:#fff;color:var(--forest);font-weight:750;border-radius:14px;padding:12px;font-size:12px;margin-top:8px}.danger-link{border:0;background:none;color:#c45e54;font-size:11px;font-weight:750;padding:12px 0;width:100%}.toast{position:fixed;bottom:calc(92px + env(safe-area-inset-bottom));left:50%;transform:translate(-50%,15px);opacity:0;background:#203d30;color:#fff;padding:11px 16px;border-radius:30px;font-size:11px;font-weight:700;z-index:20;transition:.2s;pointer-events:none;white-space:nowrap}.toast.show{opacity:1;transform:translate(-50%,0)}
-    /* NutriTrack 2.0 — identidade Bolacha & Lau */
+    /* NutriTrack 2.1 — identidade Bolacha & Lau */
     :root{--forest:#30201d;--forest2:#8d4032;--leaf:#ffd66f;--leaf2:#fff0d5;--cream:#fff8ee;--red:#ed6a60;--amber:#e99a4b;--shadow:0 12px 30px rgba(120,65,40,.09)}
     body{background:linear-gradient(160deg,#fff4d2 0%,#fff1e5 45%,#ffe2df 100%)}
     .app{background:rgba(255,250,243,.96)}
@@ -45,6 +45,125 @@
     .quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}.quick-action{border:1px solid #f1dfd3;background:#fff;border-radius:15px;padding:12px;text-align:left;color:#492c25;font-size:12px;font-weight:750}.quick-action small{display:block;color:#987c70;font-size:10px;font-weight:500;margin-top:3px}
     .favorite-btn{border:0;background:#fff0d9;color:#b34f40;border-radius:9px;width:29px;height:29px;font-size:16px}.favorite-btn.on{background:#ffe1d9;color:#d34e48}
     @media(min-width:600px){body{padding:20px 0}.app{min-height:calc(100vh - 40px);border-radius:28px;overflow:hidden}.bottom-nav{bottom:20px;border-radius:0 0 28px 28px}}
+
+    /* NutriTrack 2.1 — acabamento premium e controlos tácteis */
+    :root{
+      --shadow:0 8px 24px rgba(91,48,34,.065);
+      --line:#f0e4d9;
+      --ink:#30201d;
+      --muted:#8c7770;
+      --leaf:#ffd66f;
+      --leaf2:#fff0d5;
+    }
+    html{scroll-behavior:smooth}
+    body{background:linear-gradient(160deg,#fff5d8 0%,#fff0e8 52%,#ffe5e1 100%)}
+    .app{border:1px solid rgba(210,135,103,.10);box-shadow:0 18px 55px rgba(111,64,44,.10)}
+    header{padding-bottom:15px}
+    .brandmark{border-radius:14px;transition:transform .22s,box-shadow .22s}
+    .brandmark:active{transform:scale(.92) rotate(-5deg)}
+    .brandname{letter-spacing:-.7px}
+    .date-label{letter-spacing:1px;color:#a27d6d}
+    .greeting{font-size:25px;line-height:1.12}
+    .screen-title{font-size:25px;line-height:1.15}
+    .screen-desc{line-height:1.5}
+    .card,.metric,.meal-card,.calendar-card,.stats-card,.food-card{
+      border:1px solid rgba(177,112,82,.11);
+      box-shadow:0 5px 18px rgba(96,54,38,.045);
+      transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+    }
+    .meal-card{padding:14px 15px}
+    .meal-card:active,.food-card:active,.quick-action:active{transform:scale(.985)}
+    .hero{box-shadow:0 14px 30px rgba(112,53,42,.17)}
+    .ring{box-shadow:0 0 0 7px rgba(255,255,255,.055)}
+    .metric{background:linear-gradient(155deg,#fff 0%,#fffaf5 100%)}
+    .metric-icon{background:#fff0d9}
+    .metric-value{letter-spacing:-1px}
+    .mini-track,.macro-track{background:#f3ece5}
+    .mini-fill{background:linear-gradient(90deg,#e8a15c,#d96c58)}
+    .macro-grid{gap:8px}
+    .macro-box{box-shadow:inset 0 1px 0 #fff;background:linear-gradient(160deg,#fff 0%,#fffaf5 100%)}
+    .macro-box:nth-child(1) .macro-track i{background:linear-gradient(90deg,#e5a04c,#d86b55)!important}
+    .macro-box:nth-child(2) .macro-track i{background:linear-gradient(90deg,#f4c95f,#e99b4c)!important}
+    .macro-box:nth-child(3) .macro-track i{background:linear-gradient(90deg,#e58a72,#bd6456)!important}
+    .mascot-note{box-shadow:0 7px 18px rgba(180,101,73,.08);border-color:#f3d6bd}
+    .mascot-face{font-size:36px}
+    .quick-actions{gap:10px}
+    .quick-action{position:relative;overflow:hidden;border-color:#f0ddce;background:linear-gradient(145deg,#fff,#fff8ef);box-shadow:0 3px 10px rgba(111,65,43,.04);transition:transform .16s,box-shadow .16s,border-color .16s}
+    .quick-action:active{transform:scale(.97);box-shadow:0 1px 4px rgba(111,65,43,.08)}
+    .quick-action small{color:#9a786a}
+    .add-wide,.primary-btn,.secondary-btn,.round-btn,.icon-btn,.favorite-btn,.nav-btn,.text-btn,.day,.goal-row button{
+      -webkit-tap-highlight-color:transparent;
+      transition:transform .16s ease,filter .16s ease,box-shadow .16s ease,background .16s ease,color .16s ease;
+    }
+    .add-wide,.primary-btn{position:relative;overflow:hidden;box-shadow:0 7px 16px rgba(195,104,75,.16)}
+    .add-wide{background:linear-gradient(100deg,#ffdf83 0%,#ffb08e 100%);color:#3b211c}
+    .add-wide:active,.primary-btn:active{transform:translateY(1px) scale(.985);filter:saturate(1.12);box-shadow:0 3px 8px rgba(195,104,75,.14)}
+    .primary-btn{background:linear-gradient(105deg,#a74739,#d96b58)}
+    .secondary-btn{border-color:#f0d9ca;background:#fffaf5;color:#93483b}
+    .secondary-btn:active,.round-btn:active,.icon-btn:active,.favorite-btn:active{transform:scale(.93)}
+    .round-btn{border-radius:12px;background:#fffaf5;border-color:#efdfd4;color:#984c3d;font-weight:800;box-shadow:0 2px 6px rgba(111,65,43,.04)}
+    .text-btn{color:#a64d3f;border-radius:9px}
+    .text-btn:active{background:#fff0df}
+    .icon-btn{background:#fff1e4;color:#9b5949;border:1px solid #f3e1d4}
+    .favorite-btn{background:#fff3df;border:1px solid #f4e0c9}
+    .favorite-btn.on{background:#ffe2d9;border-color:#f5c9bd;color:#d14e48}
+    .bottom-nav{
+      padding:9px 10px calc(9px + env(safe-area-inset-bottom));
+      background:rgba(255,251,247,.94);
+      border-top:1px solid rgba(221,183,160,.35);
+      box-shadow:0 -8px 24px rgba(95,57,39,.055);
+    }
+    .nav-btn{border-radius:14px;gap:4px;padding:6px 4px;color:#a4938b;font-size:9px}
+    .nav-btn .nav-icon{font-size:19px;min-width:35px;min-height:27px;display:grid;place-items:center;border-radius:10px}
+    .nav-btn.active{color:#a4483b}
+    .nav-btn.active .nav-icon{background:linear-gradient(145deg,#ffe7a4,#ffd6c5);padding:0;margin:0;box-shadow:0 3px 8px rgba(199,111,78,.12)}
+    .nav-btn:active{transform:scale(.94)}
+    .toolbar{background:rgba(255,255,255,.62);border:1px solid #f0e2d8;border-radius:15px;padding:7px 9px}
+    .month-control{gap:8px}
+    .month-control strong{font-size:13px;color:#57352c}
+    .calendar-card{padding:14px 10px;background:linear-gradient(160deg,#fff 0%,#fffaf5 100%)}
+    .day{min-height:43px;border-radius:13px;font-weight:650}
+    .day.selected{background:linear-gradient(145deg,#9f4537,#d96b58);color:#fff;box-shadow:0 4px 10px rgba(164,72,58,.2)}
+    .day.today:not(.selected){box-shadow:inset 0 0 0 1.5px #e7a35f;background:#fff7e8}
+    .day:active{transform:scale(.9)}
+    .day-dot{width:5px;height:5px}
+    .selected-day-card{background:linear-gradient(145deg,#fff,#fff9f2)}
+    .small-stat{background:#fff3e6;border:1px solid #f5e4d6}
+    .search{border-color:#efdfd4;box-shadow:0 3px 10px rgba(111,65,43,.035);padding:14px 15px}
+    .search:focus,.field input:focus,.field select:focus{border-color:#e5a16f;box-shadow:0 0 0 3px rgba(237,165,111,.14);outline:none}
+    .food-card{background:linear-gradient(145deg,#fff,#fffaf6);padding:13px 14px}
+    .food-kcal{color:#a64d3f}
+    .stats-card{background:linear-gradient(145deg,#fff,#fff9f3)}
+    .stats-card strong{color:#63372e}
+    .chart-card{padding:17px;background:linear-gradient(160deg,#fff 0%,#fffaf5 100%)}
+    .chart-title{font-size:14px;letter-spacing:-.2px;color:#4a2d26}
+    .chart-sub{font-size:10px;line-height:1.45}
+    .bars{height:158px;gap:10px;padding:18px 4px 0;position:relative}
+    .bars:before{content:"";position:absolute;inset:18px 0 21px;background:repeating-linear-gradient(to bottom,transparent 0,transparent 32px,#f2e9e1 33px,#f2e9e1 34px);pointer-events:none}
+    .bar-wrap{position:relative;z-index:1;gap:7px}
+    .bar{max-width:27px;background:linear-gradient(180deg,#ffcf79,#ee9a72);border-radius:9px 9px 4px 4px;box-shadow:0 3px 8px rgba(216,139,91,.13);transition:height .35s ease,filter .2s}
+    .bar.current{background:linear-gradient(180deg,#d96e59,#a74739)}
+    .bar.over{background:linear-gradient(180deg,#ef9a83,#ce5d56)}
+    .bar-value{font-size:8px;color:#98786b;font-weight:650}
+    .bar-label{font-size:9px;font-weight:700;color:#987e72}
+    .goal-row{color:#775b50}
+    .goal-row button{background:#fff0dc;color:#9e4b3d;border:1px solid #f2ddca;border-radius:10px}
+    .modal-backdrop{background:rgba(48,28,24,.42);backdrop-filter:blur(5px)}
+    .modal{background:#fff9f2;border:1px solid rgba(255,255,255,.8)}
+    .field label{color:#78584d}
+    .field input,.field select{border-color:#efdfd4;background:#fff}
+    .calc-preview{background:linear-gradient(110deg,#fff0d5,#ffe4dc)}
+    .calc-preview strong{color:#a4483b}
+    .close-btn{background:#fff0e3;color:#995344}
+    .toast{background:#4a2b25;box-shadow:0 8px 22px rgba(60,32,25,.2)}
+    button:disabled{opacity:.38;cursor:not-allowed}
+    @media(hover:hover){
+      .card:hover,.food-card:hover,.stats-card:hover{box-shadow:0 9px 23px rgba(96,54,38,.075);border-color:#eed7c7}
+      .add-wide:hover,.primary-btn:hover{filter:brightness(1.025);box-shadow:0 9px 20px rgba(195,104,75,.2)}
+      .nav-btn:hover{background:#fff2e7}
+    }
+    @media(min-width:600px){.app{border-radius:30px}.bottom-nav{border-radius:0 0 30px 30px}}
+
   </style>
 </head>
 <body>
