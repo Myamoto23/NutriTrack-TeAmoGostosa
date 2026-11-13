@@ -1,538 +1,106 @@
 <!doctype html>
 <html lang="pt-PT">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#fff1e5">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="NutriTrack">
-  <meta name="description" content="Diário alimentar, calorias, passos e estatísticas semanais.">
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="apple-touch-icon" href="icon.png">
-  <title>NutriTrack 3.0</title>
-  <style>
-    :root{--forest:#e87524;--forest2:#c95b22;--leaf:#ffbd35;--leaf2:#fff0d4;--cream:#fff8f1;--paper:#fff;--ink:#24201e;--muted:#887d76;--line:#f1e5da;--red:#ed6655;--amber:#f2ad32;--shadow:0 12px 34px rgba(170,94,42,.09)}
-    *{box-sizing:border-box}html{background:#fff3e9}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--cream);min-height:100vh}button,input,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #f2ad32;outline-offset:2px}
-    .app{width:100%;max-width:520px;min-height:100vh;margin:0 auto;background:var(--cream);position:relative;padding-bottom:calc(88px + env(safe-area-inset-bottom));box-shadow:0 0 50px rgba(20,50,35,.06)}
-    header{padding:calc(18px + env(safe-area-inset-top)) 22px 12px;display:flex;align-items:center;justify-content:space-between}
-    .brand{display:flex;align-items:center;gap:10px}.brandmark{width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,#ffbd35,#ed7040);display:grid;place-items:center;color:#fff;font-size:20px}.brandname{font-weight:800;letter-spacing:-.5px;font-size:20px}.brandname span{color:var(--forest2)}.date-label{font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);font-weight:700}
-    main{padding:8px 18px 24px}.screen{display:none;animation:fade .2s ease}.screen.active{display:block}@keyframes fade{from{opacity:.5;transform:translateY(4px)}to{opacity:1;transform:none}}
-    .greeting{font-size:26px;letter-spacing:-.8px;font-weight:800;margin:8px 0 4px}.subtle{color:var(--muted);font-size:13px}.section-head{display:flex;align-items:center;justify-content:space-between;margin:23px 2px 12px}.section-head h2{font-size:16px;margin:0;letter-spacing:-.2px}.text-btn{border:0;background:none;color:var(--forest2);font-size:12px;font-weight:750;padding:6px}
-    .card{background:var(--paper);border:1px solid rgba(30,65,46,.06);border-radius:22px;padding:17px;box-shadow:var(--shadow)}.hero{background:linear-gradient(135deg,#f7a52b,#e9653f);color:#fff;border-radius:25px;padding:20px;position:relative;overflow:hidden;box-shadow:0 16px 32px rgba(24,61,48,.18)}.hero:after{content:"";position:absolute;width:180px;height:180px;border:1px solid rgba(220,245,195,.12);border-radius:50%;right:-55px;top:-75px;box-shadow:0 0 0 22px rgba(220,245,195,.035),0 0 0 45px rgba(220,245,195,.025)}
-    .hero-top{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}.eyebrow{font-size:10px;letter-spacing:1.2px;color:#c2d4c8;text-transform:uppercase;font-weight:750}.date-chip{font-size:10px;font-weight:750;color:#e7f1df;background:rgba(255,255,255,.11);border-radius:20px;padding:7px 10px}.calorie-row{display:flex;align-items:center;gap:18px;margin-top:13px;position:relative;z-index:1}.ring{width:118px;height:118px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--leaf) var(--progress,0%),rgba(255,255,255,.14) 0);position:relative;flex-shrink:0}.ring:before{content:"";position:absolute;inset:8px;background:#e87524;border-radius:50%}.ring-inner{position:relative;text-align:center}.ring-inner strong{display:block;font-size:25px;letter-spacing:-1px}.ring-inner small{color:#c4d5ca;font-size:9px;letter-spacing:.7px;text-transform:uppercase}.calorie-number{font-size:35px;line-height:1;font-weight:850;letter-spacing:-1.5px}.calorie-number small{font-size:12px;color:#d0ddd4;font-weight:600;letter-spacing:0}.remaining{margin-top:9px;color:#d3dfd7;font-size:12px}.remaining b{color:var(--leaf);font-size:14px}.progress-track{height:7px;background:rgba(255,255,255,.16);border-radius:8px;margin-top:17px;overflow:hidden;position:relative;z-index:1}.progress-fill{height:100%;background:#ffcf58;border-radius:8px;width:0;transition:width .25s}.hero-foot{display:flex;justify-content:space-between;color:#c0d1c6;font-size:10px;margin-top:8px;position:relative;z-index:1}
-    .metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.metric{background:#fff;border:1px solid var(--line);border-radius:19px;padding:14px;min-height:112px}.metric-top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:11px;font-weight:650}.metric-icon{width:29px;height:29px;display:grid;place-items:center;border-radius:10px;background:var(--leaf2);font-size:15px}.metric-value{font-size:23px;font-weight:820;letter-spacing:-.7px;margin-top:10px}.metric-foot{font-size:10px;color:var(--muted);margin-top:3px}.mini-track{height:5px;background:#edf0eb;border-radius:8px;margin-top:9px;overflow:hidden}.mini-fill{height:100%;background:#88ad69;border-radius:8px}
-    .meal-list{display:grid;gap:9px}.meal-card{background:#fff;border:1px solid var(--line);border-radius:17px;padding:13px 14px}.meal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}.meal-title{font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px}.meal-total{font-size:12px;color:var(--forest2);font-weight:800}.meal-empty{font-size:11px;color:#9aa49d;padding:4px 0 1px}.food-line{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-top:1px solid #f0f2ee;font-size:12px}.food-line:first-of-type{border-top:0}.food-line small{display:block;color:var(--muted);font-size:10px;margin-top:2px}.line-actions{display:flex;align-items:center;gap:8px}.line-kcal{font-weight:750;white-space:nowrap}.icon-btn{border:0;background:#f2f5ef;border-radius:9px;width:27px;height:27px;color:#536358;font-size:13px}.add-wide{width:100%;border:0;border-radius:15px;padding:14px;background:linear-gradient(100deg,#ffbd35,#ed7040);color:#fff;font-size:13px;font-weight:800;margin-top:11px;box-shadow:0 6px 16px rgba(110,150,75,.12)}
-    .bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.94);backdrop-filter:blur(18px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);z-index:5}.nav-btn{border:0;background:none;color:#929d95;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:9px;font-weight:700;padding:5px}.nav-btn .nav-icon{font-size:19px;line-height:1.2}.nav-btn.active{color:var(--forest)}.nav-btn.active .nav-icon{background:var(--leaf2);border-radius:11px;padding:5px 13px;margin-top:-5px}
-    .screen-title{font-size:26px;letter-spacing:-.8px;margin:10px 0 4px;font-weight:850}.screen-desc{font-size:12px;color:var(--muted);margin:0 0 19px}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:12px 0}.month-control{display:flex;align-items:center;gap:12px}.month-control strong{font-size:14px;min-width:125px;text-align:center}.round-btn{width:32px;height:32px;border:1px solid var(--line);border-radius:11px;background:#fff;color:var(--forest);font-size:17px}.calendar-card{background:#fff;border:1px solid var(--line);border-radius:21px;padding:14px 10px;box-shadow:var(--shadow)}.weekdays,.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}.weekdays{margin-bottom:8px}.weekdays span{font-size:10px;color:#99a39b;font-weight:750;padding:6px 0}.day{border:0;background:transparent;min-height:49px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:#38483e;font-size:12px}.day.muted{color:#c2c9c2}.day.selected{background:var(--forest);color:#fff}.day.today:not(.selected){box-shadow:inset 0 0 0 1.5px #8eaf74}.day-dot{width:5px;height:5px;border-radius:50%;background:transparent}.day-dot.green{background:#84a96c}.day-dot.amber{background:#dda84f}.day-dot.red{background:#d56f62}.day.selected .day-dot{background:var(--leaf)}.legend{display:flex;flex-wrap:wrap;gap:12px;margin:12px 3px 0;font-size:10px;color:var(--muted)}.legend span{display:flex;align-items:center;gap:5px}.legend i{width:7px;height:7px;border-radius:50%;display:inline-block}.selected-day-card{margin-top:15px}.selected-day-card h3{margin:0;font-size:14px}.selected-day-stats{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}.small-stat{background:#f5f7f2;border-radius:13px;padding:11px}.small-stat strong{display:block;font-size:18px;margin-top:4px}.small-stat span{font-size:10px;color:var(--muted)}
-    .search{width:100%;border:1px solid var(--line);border-radius:14px;background:#fff;padding:13px 14px;font-size:13px;color:var(--ink);margin:8px 0 12px}.food-list{display:grid;gap:8px}.food-card{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px 13px}.food-name{font-size:13px;font-weight:750}.food-meta{font-size:10px;color:var(--muted);margin-top:3px}.food-kcal{font-size:13px;font-weight:850;color:var(--forest2);white-space:nowrap}.food-actions{display:flex;gap:6px;margin-left:4px}.empty-state{text-align:center;padding:28px 15px;color:var(--muted);font-size:12px}.empty-icon{font-size:28px;margin-bottom:8px}
-    .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.stats-card{background:#fff;border:1px solid var(--line);border-radius:17px;padding:14px}.stats-card span{font-size:10px;color:var(--muted)}.stats-card strong{display:block;font-size:22px;letter-spacing:-.6px;margin-top:7px}.stats-card small{font-size:10px;color:var(--muted)}.chart-card{margin-top:12px}.chart-title{font-size:13px;font-weight:800}.chart-sub{font-size:10px;color:var(--muted);margin-top:3px}.bars{height:145px;display:grid;grid-template-columns:repeat(7,1fr);align-items:end;gap:9px;padding-top:18px}.bar-wrap{height:100%;display:flex;flex-direction:column;justify-content:end;align-items:center;gap:6px}.bar{width:100%;max-width:25px;background:#dce8d1;border-radius:8px 8px 4px 4px;min-height:3px;position:relative}.bar.current{background:var(--forest)}.bar.over{background:#d98b7e}.bar-label{font-size:9px;color:var(--muted)}.bar-value{font-size:8px;color:#738078}.goal-row{display:flex;justify-content:space-between;align-items:center;margin-top:13px;padding-top:12px;border-top:1px solid var(--line);font-size:11px}.goal-row button{border:0;background:var(--leaf2);color:var(--forest);font-size:10px;font-weight:800;border-radius:9px;padding:7px 9px}
-    .modal-backdrop{position:fixed;inset:0;background:rgba(13,32,23,.42);z-index:10;display:none;align-items:flex-end;justify-content:center;padding:12px}.modal-backdrop.open{display:flex}.modal{background:var(--cream);width:100%;max-width:500px;border-radius:25px 25px 18px 18px;padding:19px 18px calc(19px + env(safe-area-inset-bottom));max-height:90vh;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:slide .2s ease}@keyframes slide{from{transform:translateY(20px);opacity:.7}to{transform:none;opacity:1}}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.modal-head h3{margin:0;font-size:18px}.close-btn{border:0;background:#e9eee6;border-radius:10px;width:31px;height:31px;font-size:17px;color:#536258}.field{display:grid;gap:6px;margin:12px 0}.field label{font-size:11px;font-weight:750;color:#58655c}.field input,.field select{width:100%;border:1px solid #dfe6dc;border-radius:12px;padding:13px;background:#fff;color:var(--ink);font-size:13px}.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.calc-preview{border-radius:15px;background:var(--leaf2);padding:13px;margin:13px 0;display:flex;align-items:center;justify-content:space-between}.calc-preview span{font-size:11px;color:#60715f}.calc-preview strong{font-size:22px;color:var(--forest)}.primary-btn{width:100%;border:0;background:var(--forest);color:#fff;font-weight:800;border-radius:14px;padding:14px;font-size:13px;margin-top:6px}.secondary-btn{width:100%;border:1px solid var(--line);background:#fff;color:var(--forest);font-weight:750;border-radius:14px;padding:12px;font-size:12px;margin-top:8px}.danger-link{border:0;background:none;color:#c45e54;font-size:11px;font-weight:750;padding:12px 0;width:100%}.toast{position:fixed;bottom:calc(92px + env(safe-area-inset-bottom));left:50%;transform:translate(-50%,15px);opacity:0;background:#203d30;color:#fff;padding:11px 16px;border-radius:30px;font-size:11px;font-weight:700;z-index:20;transition:.2s;pointer-events:none;white-space:nowrap}.toast.show{opacity:1;transform:translate(-50%,0)}
-    /* NutriTrack 2.1 — identidade Bolacha & Lau */
-    :root{--forest:#30201d;--forest2:#8d4032;--leaf:#ffd66f;--leaf2:#fff0d5;--cream:#fff8ee;--red:#ed6a60;--amber:#e99a4b;--shadow:0 12px 30px rgba(120,65,40,.09)}
-    body{background:linear-gradient(160deg,#fff4d2 0%,#fff1e5 45%,#ffe2df 100%)}
-    .app{background:rgba(255,250,243,.96)}
-    .brandmark{background:linear-gradient(145deg,#ffe27a,#ff9875);color:#39211b;font-size:23px;box-shadow:0 4px 12px #ed987044}
-    .brandname span{color:#d45d4f}.hero{background:linear-gradient(135deg,#35211e,#873f32 70%,#b64f40)}
-    .ring{background:conic-gradient(#ffd66f var(--progress,0%),rgba(255,255,255,.16) 0)}
-    .ring:before{background:#563027}.progress-fill{background:#ffd66f}.add-wide{background:linear-gradient(90deg,#ffe08a,#ffb18f);color:#3b211c}
-    .nav-btn.active{color:#9e4437}.nav-btn.active .nav-icon{background:#ffedcf}
-    .primary-btn{background:linear-gradient(100deg,#9f4537,#d76555)}
-    .mascot-note{display:flex;align-items:center;gap:12px;background:linear-gradient(110deg,#fff0c8,#ffe0d6);border:1px solid #f6d7bd;border-radius:18px;padding:12px 14px;margin:13px 0;color:#43251e}
-    .mascot-face{font-size:34px;line-height:1;filter:drop-shadow(0 3px 2px #a64c3830);animation:mascot-bob 2.8s ease-in-out infinite}
-    @keyframes mascot-bob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-4px) rotate(3deg)}}
-    .macro-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.macro-box{background:#fff;border:1px solid #f2e6dc;border-radius:14px;padding:10px}.macro-box b{display:block;font-size:17px}.macro-box span{font-size:10px;color:var(--muted)}.macro-track{height:5px;border-radius:8px;background:#f2eee8;margin-top:7px;overflow:hidden}.macro-track i{display:block;height:100%;border-radius:8px;background:#e58a63}
-    .quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}.quick-action{border:1px solid #f1dfd3;background:#fff;border-radius:15px;padding:12px;text-align:left;color:#492c25;font-size:12px;font-weight:750}.quick-action small{display:block;color:#987c70;font-size:10px;font-weight:500;margin-top:3px}
-    .favorite-btn{border:0;background:#fff0d9;color:#b34f40;border-radius:9px;width:29px;height:29px;font-size:16px}.favorite-btn.on{background:#ffe1d9;color:#d34e48}
-    @media(min-width:600px){body{padding:20px 0}.app{min-height:calc(100vh - 40px);border-radius:28px;overflow:hidden}.bottom-nav{bottom:20px;border-radius:0 0 28px 28px}}
-
-    /* NutriTrack 2.1 — acabamento premium e controlos tácteis */
-    :root{
-      --shadow:0 8px 24px rgba(91,48,34,.065);
-      --line:#f0e4d9;
-      --ink:#30201d;
-      --muted:#8c7770;
-      --leaf:#ffd66f;
-      --leaf2:#fff0d5;
-    }
-    html{scroll-behavior:smooth}
-    body{background:linear-gradient(160deg,#fff5d8 0%,#fff0e8 52%,#ffe5e1 100%)}
-    .app{border:1px solid rgba(210,135,103,.10);box-shadow:0 18px 55px rgba(111,64,44,.10)}
-    header{padding-bottom:15px}
-    .brandmark{border-radius:14px;transition:transform .22s,box-shadow .22s}
-    .brandmark:active{transform:scale(.92) rotate(-5deg)}
-    .brandname{letter-spacing:-.7px}
-    .date-label{letter-spacing:1px;color:#a27d6d}
-    .greeting{font-size:25px;line-height:1.12}
-    .screen-title{font-size:25px;line-height:1.15}
-    .screen-desc{line-height:1.5}
-    .card,.metric,.meal-card,.calendar-card,.stats-card,.food-card{
-      border:1px solid rgba(177,112,82,.11);
-      box-shadow:0 5px 18px rgba(96,54,38,.045);
-      transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
-    }
-    .meal-card{padding:14px 15px}
-    .meal-card:active,.food-card:active,.quick-action:active{transform:scale(.985)}
-    .hero{box-shadow:0 14px 30px rgba(112,53,42,.17)}
-    .ring{box-shadow:0 0 0 7px rgba(255,255,255,.055)}
-    .metric{background:linear-gradient(155deg,#fff 0%,#fffaf5 100%)}
-    .metric-icon{background:#fff0d9}
-    .metric-value{letter-spacing:-1px}
-    .mini-track,.macro-track{background:#f3ece5}
-    .mini-fill{background:linear-gradient(90deg,#e8a15c,#d96c58)}
-    .macro-grid{gap:8px}
-    .macro-box{box-shadow:inset 0 1px 0 #fff;background:linear-gradient(160deg,#fff 0%,#fffaf5 100%)}
-    .macro-box:nth-child(1) .macro-track i{background:linear-gradient(90deg,#e5a04c,#d86b55)!important}
-    .macro-box:nth-child(2) .macro-track i{background:linear-gradient(90deg,#f4c95f,#e99b4c)!important}
-    .macro-box:nth-child(3) .macro-track i{background:linear-gradient(90deg,#e58a72,#bd6456)!important}
-    .mascot-note{box-shadow:0 7px 18px rgba(180,101,73,.08);border-color:#f3d6bd}
-    .mascot-face{font-size:36px}
-    .quick-actions{gap:10px}
-    .quick-action{position:relative;overflow:hidden;border-color:#f0ddce;background:linear-gradient(145deg,#fff,#fff8ef);box-shadow:0 3px 10px rgba(111,65,43,.04);transition:transform .16s,box-shadow .16s,border-color .16s}
-    .quick-action:active{transform:scale(.97);box-shadow:0 1px 4px rgba(111,65,43,.08)}
-    .quick-action small{color:#9a786a}
-    .add-wide,.primary-btn,.secondary-btn,.round-btn,.icon-btn,.favorite-btn,.nav-btn,.text-btn,.day,.goal-row button{
-      -webkit-tap-highlight-color:transparent;
-      transition:transform .16s ease,filter .16s ease,box-shadow .16s ease,background .16s ease,color .16s ease;
-    }
-    .add-wide,.primary-btn{position:relative;overflow:hidden;box-shadow:0 7px 16px rgba(195,104,75,.16)}
-    .add-wide{background:linear-gradient(100deg,#ffdf83 0%,#ffb08e 100%);color:#3b211c}
-    .add-wide:active,.primary-btn:active{transform:translateY(1px) scale(.985);filter:saturate(1.12);box-shadow:0 3px 8px rgba(195,104,75,.14)}
-    .primary-btn{background:linear-gradient(105deg,#a74739,#d96b58)}
-    .secondary-btn{border-color:#f0d9ca;background:#fffaf5;color:#93483b}
-    .secondary-btn:active,.round-btn:active,.icon-btn:active,.favorite-btn:active{transform:scale(.93)}
-    .round-btn{border-radius:12px;background:#fffaf5;border-color:#efdfd4;color:#984c3d;font-weight:800;box-shadow:0 2px 6px rgba(111,65,43,.04)}
-    .text-btn{color:#a64d3f;border-radius:9px}
-    .text-btn:active{background:#fff0df}
-    .icon-btn{background:#fff1e4;color:#9b5949;border:1px solid #f3e1d4}
-    .favorite-btn{background:#fff3df;border:1px solid #f4e0c9}
-    .favorite-btn.on{background:#ffe2d9;border-color:#f5c9bd;color:#d14e48}
-    .bottom-nav{
-      padding:9px 10px calc(9px + env(safe-area-inset-bottom));
-      background:rgba(255,251,247,.94);
-      border-top:1px solid rgba(221,183,160,.35);
-      box-shadow:0 -8px 24px rgba(95,57,39,.055);
-    }
-    .nav-btn{border-radius:14px;gap:4px;padding:6px 4px;color:#a4938b;font-size:9px}
-    .nav-btn .nav-icon{font-size:19px;min-width:35px;min-height:27px;display:grid;place-items:center;border-radius:10px}
-    .nav-btn.active{color:#a4483b}
-    .nav-btn.active .nav-icon{background:linear-gradient(145deg,#ffe7a4,#ffd6c5);padding:0;margin:0;box-shadow:0 3px 8px rgba(199,111,78,.12)}
-    .nav-btn:active{transform:scale(.94)}
-    .toolbar{background:rgba(255,255,255,.62);border:1px solid #f0e2d8;border-radius:15px;padding:7px 9px}
-    .month-control{gap:8px}
-    .month-control strong{font-size:13px;color:#57352c}
-    .calendar-card{padding:14px 10px;background:linear-gradient(160deg,#fff 0%,#fffaf5 100%)}
-    .day{min-height:43px;border-radius:13px;font-weight:650}
-    .day.selected{background:linear-gradient(145deg,#9f4537,#d96b58);color:#fff;box-shadow:0 4px 10px rgba(164,72,58,.2)}
-    .day.today:not(.selected){box-shadow:inset 0 0 0 1.5px #e7a35f;background:#fff7e8}
-    .day:active{transform:scale(.9)}
-    .day-dot{width:5px;height:5px}
-    .selected-day-card{background:linear-gradient(145deg,#fff,#fff9f2)}
-    .small-stat{background:#fff3e6;border:1px solid #f5e4d6}
-    .search{border-color:#efdfd4;box-shadow:0 3px 10px rgba(111,65,43,.035);padding:14px 15px}
-    .search:focus,.field input:focus,.field select:focus{border-color:#e5a16f;box-shadow:0 0 0 3px rgba(237,165,111,.14);outline:none}
-    .food-card{background:linear-gradient(145deg,#fff,#fffaf6);padding:13px 14px}
-    .food-kcal{color:#a64d3f}
-    .stats-card{background:linear-gradient(145deg,#fff,#fff9f3)}
-    .stats-card strong{color:#63372e}
-    .chart-card{padding:17px;background:linear-gradient(160deg,#fff 0%,#fffaf5 100%)}
-    .chart-title{font-size:14px;letter-spacing:-.2px;color:#4a2d26}
-    .chart-sub{font-size:10px;line-height:1.45}
-    .bars{height:158px;gap:10px;padding:18px 4px 0;position:relative}
-    .bars:before{content:"";position:absolute;inset:18px 0 21px;background:repeating-linear-gradient(to bottom,transparent 0,transparent 32px,#f2e9e1 33px,#f2e9e1 34px);pointer-events:none}
-    .bar-wrap{position:relative;z-index:1;gap:7px}
-    .bar{max-width:27px;background:linear-gradient(180deg,#ffcf79,#ee9a72);border-radius:9px 9px 4px 4px;box-shadow:0 3px 8px rgba(216,139,91,.13);transition:height .35s ease,filter .2s}
-    .bar.current{background:linear-gradient(180deg,#d96e59,#a74739)}
-    .bar.over{background:linear-gradient(180deg,#ef9a83,#ce5d56)}
-    .bar-value{font-size:8px;color:#98786b;font-weight:650}
-    .bar-label{font-size:9px;font-weight:700;color:#987e72}
-    .goal-row{color:#775b50}
-    .goal-row button{background:#fff0dc;color:#9e4b3d;border:1px solid #f2ddca;border-radius:10px}
-    .modal-backdrop{background:rgba(48,28,24,.42);backdrop-filter:blur(5px)}
-    .modal{background:#fff9f2;border:1px solid rgba(255,255,255,.8)}
-    .field label{color:#78584d}
-    .field input,.field select{border-color:#efdfd4;background:#fff}
-    .calc-preview{background:linear-gradient(110deg,#fff0d5,#ffe4dc)}
-    .calc-preview strong{color:#a4483b}
-    .close-btn{background:#fff0e3;color:#995344}
-    .toast{background:#4a2b25;box-shadow:0 8px 22px rgba(60,32,25,.2)}
-    button:disabled{opacity:.38;cursor:not-allowed}
-    @media(hover:hover){
-      .card:hover,.food-card:hover,.stats-card:hover{box-shadow:0 9px 23px rgba(96,54,38,.075);border-color:#eed7c7}
-      .add-wide:hover,.primary-btn:hover{filter:brightness(1.025);box-shadow:0 9px 20px rgba(195,104,75,.2)}
-      .nav-btn:hover{background:#fff2e7}
-    }
-    @media(min-width:600px){.app{border-radius:30px}.bottom-nav{border-radius:0 0 30px 30px}}
-
-  
-    .bottom-nav{grid-template-columns:repeat(5,1fr);padding-top:8px}
-    .nav-btn{font-size:9px;min-width:0;transition:transform .18s ease,color .18s ease}
-    .nav-btn:active{transform:scale(.92)}
-    .nav-btn.active{color:#e87524}
-    .nav-btn.active .nav-icon{background:#fff0d4;color:#e87524}
-    .nav-icon{font-size:20px!important}
-    .macro-rings{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}
-    .macro-ring-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:12px 6px;text-align:center;min-width:0}
-    .macro-donut{width:72px;height:72px;margin:0 auto 8px;border-radius:50%;display:grid;place-items:center;position:relative}
-    .macro-donut:before{content:"";position:absolute;inset:7px;background:#fff;border-radius:50%}
-    .macro-donut b{position:relative;font-size:14px;letter-spacing:-.4px}
-    .macro-ring-card strong{display:block;font-size:11px}
-    .macro-ring-card small{display:block;color:var(--muted);font-size:9px;margin-top:3px}
-    .chart-legend{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:10px;font-size:10px;color:var(--muted)}
-    .chart-legend i{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:4px}
-    .weight-chart{width:100%;height:178px;display:block;margin-top:12px;overflow:visible}
-    .weight-chart text{font-family:inherit;fill:#8b817a;font-size:9px}
-    .weight-summary{display:flex;justify-content:space-between;gap:8px;margin-top:10px}
-    .weight-summary>div{background:#fff4e8;border-radius:14px;padding:10px;flex:1}
-    .weight-summary span{display:block;color:var(--muted);font-size:9px}
-    .weight-summary b{display:block;font-size:16px;margin-top:4px}
-    .profile-avatar{width:92px;height:92px;border-radius:50%;margin:8px auto 12px;background:linear-gradient(135deg,#ffe2a8,#ffb68d);display:grid;place-items:center;font-size:48px;border:4px solid #fff;box-shadow:0 8px 24px rgba(210,120,50,.15)}
-    .profile-name{text-align:center;font-size:21px;font-weight:850;margin-bottom:4px}
-    .profile-menu{display:grid;gap:8px;margin-top:18px}
-    .profile-row{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;text-align:left;width:100%;color:var(--ink)}
-    .profile-row .p-icon{width:36px;height:36px;border-radius:12px;background:#fff0d4;display:grid;place-items:center;color:#e87524;font-size:18px}
-    .profile-row strong{display:block;font-size:12px}.profile-row small{display:block;color:var(--muted);font-size:10px;margin-top:3px}
-    .profile-row .chev{margin-left:auto;color:#a99a8f;font-size:20px}
-    .primary-btn,.add-wide{transition:transform .15s ease,filter .15s ease,box-shadow .15s ease}
-    .primary-btn:active,.add-wide:active,.quick-action:active,.round-btn:active{transform:scale(.97);filter:saturate(1.1)}
-    .card,.metric,.meal-card,.food-card{box-shadow:0 7px 22px rgba(170,94,42,.055)}
-    @media(max-width:370px){.macro-donut{width:62px;height:62px}.macro-ring-card{padding:10px 3px}.nav-btn{font-size:8px}}
-
-  
-    body{background:radial-gradient(ellipse at 50% 0%,#fffdf9 0,#fff6ed 58%,#fff0e2 100%)}
-    .app{background:transparent;box-shadow:none;max-width:520px}
-    header{padding-bottom:8px}
-    .brandmark{background:transparent;overflow:hidden}
-    .brandmark img{width:43px;height:43px;object-fit:contain}
-    .brandname{letter-spacing:-.7px}
-    .brandname span{color:#ed6c2d}
-    .greeting{font-size:23px;margin-top:12px}
-    .hero{background:linear-gradient(145deg,#ffbe31 0%,#ff9427 52%,#f05d39 100%);box-shadow:0 14px 28px rgba(229,112,37,.20)}
-    .hero:after{border-color:rgba(255,255,255,.22)}
-    .ring{background:conic-gradient(#fff 0 var(--progress),rgba(255,255,255,.24) var(--progress) 100%)}
-    .ring-inner{background:#fffaf5;color:#25201d}
-    .progress-fill{background:linear-gradient(90deg,#ffc52f,#f05b38)}
-    .metric,.card,.meal-card,.food-card,.stats-card,.calendar-card{border-color:#f3e4d7;box-shadow:0 7px 20px rgba(170,94,42,.075)}
-    .metric-icon{background:#fff0dc;color:#ef7627}
-    .mini-fill{background:linear-gradient(90deg,#ffc12e,#f36b38)}
-    .nav-btn{font-size:10px;gap:4px}
-    .nav-icon{font-size:21px!important}
-    .nav-btn.active{color:#f06d22}
-    .nav-btn.active .nav-icon{background:#fff0d9;color:#f06d22;box-shadow:0 3px 12px rgba(239,123,35,.12)}
-    .bottom-nav{grid-template-columns:repeat(5,minmax(0,1fr));background:rgba(255,255,255,.94);border:1px solid #f1e4d9;box-shadow:0 8px 25px rgba(120,75,40,.12);backdrop-filter:blur(16px)}
-    .add-wide,.primary-btn{background:linear-gradient(100deg,#ffad24,#f04e3d);box-shadow:0 8px 18px rgba(236,105,43,.20)}
-    .round-btn,.secondary-btn{border-color:#f2dfd0}
-    .macro-rings{gap:7px}
-    .macro-ring-card{box-shadow:0 5px 14px rgba(160,95,50,.05)}
-    .macro-donut{box-shadow:inset 0 0 0 1px rgba(0,0,0,.025)}
-    .weight-summary>div{background:#fff3e6}
-    .mascot-note{position:relative;padding-right:78px}
-    .mascot-note:after{content:"";position:absolute;right:8px;bottom:-2px;width:72px;height:86px;background:url('mascot.png') center bottom/contain no-repeat;pointer-events:none}
-    .profile-hero{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,#fff0d9,#fff);border:1px solid #f3dfca;border-radius:22px;padding:16px;box-shadow:var(--shadow)}
-    .profile-hero img{width:84px;height:94px;object-fit:contain}
-    .profile-hero strong{font-size:19px;display:block}
-    .profile-hero small{font-size:11px;color:var(--muted)}
-    .profile-row{background:#fff;border:1px solid #f1e3d7;border-radius:16px;padding:14px;width:100%;display:flex;align-items:center;gap:12px;text-align:left;color:var(--ink);margin-top:8px;box-shadow:0 4px 14px rgba(160,95,50,.045)}
-    .profile-row .p-icon{width:36px;height:36px;border-radius:12px;background:#fff0dc;color:#ed7027;display:grid;place-items:center;font-size:18px}
-    .profile-row strong{font-size:12px;display:block}.profile-row small{font-size:10px;color:var(--muted);display:block;margin-top:3px}
-    .profile-row .chev{margin-left:auto;font-size:22px;color:#a89586}
-    .profile-section{font-weight:800;font-size:14px;margin:20px 2px 8px}
-    .tab-pills{display:flex;gap:7px;background:#f5ece4;border-radius:18px;padding:4px;margin:10px 0 14px}
-    .tab-pills button{flex:1;border:0;background:transparent;border-radius:14px;padding:9px 4px;font-size:11px;font-weight:700;color:#766b63}
-    .tab-pills button.active{background:linear-gradient(100deg,#ffae28,#f26a36);color:#fff;box-shadow:0 3px 10px rgba(238,112,39,.2)}
-    .food-filter{display:flex;gap:7px;margin:12px 0;overflow:auto}
-    .food-filter button{white-space:nowrap;border:1px solid #f1e3d7;background:#fff;border-radius:20px;padding:8px 14px;font-size:11px}
-    .food-filter button.active{background:#f47a26;color:#fff;border-color:#f47a26}
-    .screen-title{text-align:center;font-size:21px}
-    .screen-desc{text-align:center}
-    .calorie-number{font-size:25px}
-    button{transition:transform .16s ease,box-shadow .16s ease,filter .16s ease}
-    button:active{transform:scale(.97);filter:saturate(1.12)}
-    @media(max-width:390px){.nav-btn{font-size:8px}.nav-icon{font-size:19px!important}.profile-hero img{width:70px}}
-
-  </style>
-
-  <style id="nutritrack-v3">
-    :root{--nt-orange:#f28a22;--nt-orange2:#f6a52f;--nt-coral:#f06b52;--nt-cream:#fff8f0;--nt-ink:#28211f;--nt-muted:#91827a;--nt-line:#f1e5da}
-    html,body{background:#fff7ef!important;color:var(--nt-ink)}
-    .app{max-width:520px;background:linear-gradient(180deg,#fffaf4 0%,#fff6ed 100%)!important;box-shadow:0 12px 45px rgba(108,67,40,.09)!important}
-    header{padding:calc(14px + env(safe-area-inset-top)) 20px 12px}
-    .brandmark{width:43px;height:43px;background:#ffe8c8!important;border-radius:15px!important;overflow:hidden;box-shadow:0 4px 12px #eaa14a30}
-    .brandmark img{width:100%;height:100%;object-fit:contain}
-    .brandname{font-size:21px;color:#2b211e}.brandname span{color:#e97827!important}
-    main{padding:8px 17px 28px}
-    .screen-title{font-size:25px!important;letter-spacing:-.7px!important;color:#2b211e}
-    .screen-desc{color:#94847b!important;line-height:1.5}
-    .greeting{font-size:24px!important;color:#2b211e}
-    .nt-greeting{display:flex;align-items:center;justify-content:space-between;margin:6px 0 16px}
-    .nt-greeting .screen-desc{margin:4px 0 0}
-    .nt-greeting img{width:74px;height:82px;object-fit:contain;filter:drop-shadow(0 5px 5px #9b572322)}
-    .nt-calorie-card{background:linear-gradient(145deg,#fff0d5,#ffe6d9);border:1px solid #f8dcc1;border-radius:25px;padding:18px 17px 15px;box-shadow:0 9px 25px #a95e2910}
-    .nt-card-head,.nt-panel-heading{display:flex;justify-content:space-between;align-items:center;gap:8px}
-    .nt-kicker{font-size:9px;letter-spacing:1.5px;font-weight:850;color:#c87835}
-    .nt-card-head h2,.nt-panel-heading h2{font-size:16px;margin:4px 0 0;letter-spacing:-.3px}
-    .nt-date-pill,.nt-badge{font-size:9px;font-weight:850;letter-spacing:.7px;padding:7px 10px;border-radius:20px;background:#fff7eb;color:#d97828}
-    .nt-calorie-layout{display:flex;align-items:center;gap:20px;margin:19px 0 14px}
-    .nt-big-donut{width:142px;height:142px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;background:conic-gradient(#f28a22 var(--arc),#f9d8b5 0);position:relative;box-shadow:0 5px 15px #d9873920}
-    .nt-big-donut:before{content:"";position:absolute;inset:11px;border-radius:50%;background:#fff9f2}
-    .nt-big-donut>div{position:relative;text-align:center}
-    .nt-big-donut strong{display:block;font-size:27px;letter-spacing:-1px}
-    .nt-big-donut span{font-size:9px;color:#94847b}
-    .nt-calorie-copy strong{display:block;font-size:27px;letter-spacing:-.8px;color:#d96d2a}
-    .nt-calorie-copy span,.nt-calorie-copy small{display:block;font-size:11px;color:#76665e;margin-top:2px}
-    .nt-calorie-copy small{margin-top:9px;color:#a28c7e}
-    .nt-track{height:8px;background:#f3d9c2;border-radius:10px;overflow:hidden}
-    .nt-track i{height:100%;display:block;border-radius:10px;background:linear-gradient(90deg,#f6b52e,#f06d4e)}
-    .nt-track-labels{display:flex;justify-content:space-between;font-size:9px;color:#9b887d;margin-top:7px}
-    .nt-track-labels b{color:#d97932}
-    .nt-section-title{display:flex;justify-content:space-between;align-items:center;margin:22px 2px 11px}
-    .nt-section-title h2{font-size:16px;margin:0;letter-spacing:-.3px}
-    .nt-section-title p{font-size:10px;color:#9a8a80;margin:4px 0 0}
-    .nt-section-icon{width:30px;height:30px;border-radius:11px;background:#ffedda;color:#e77d2a;display:grid;place-items:center}
-    .nt-donut-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
-    .nt-donut-card{background:#fff;border:1px solid #f0e6dd;border-radius:19px;padding:12px 4px 10px;text-align:center;box-shadow:0 4px 14px #9e603010}
-    .nt-donut{width:75px;height:75px;margin:0 auto 8px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--tone) var(--arc),#f2eee9 0);position:relative}
-    .nt-donut:before{content:"";position:absolute;inset:7px;border-radius:50%;background:#fff}
-    .nt-donut>div{position:relative}.nt-donut b{display:block;font-size:13px}.nt-donut small{font-size:9px;color:#9a8a80}
-    .nt-donut-card strong{display:block;font-size:10px}.nt-donut-card>span{display:block;font-size:9px;color:#a4978f;margin-top:3px}
-    .nt-two-metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:13px}
-    .nt-info-card{background:#fff;border:1px solid #f0e6dd;border-radius:20px;padding:13px;min-width:0;box-shadow:0 4px 14px #9e603010}
-    .nt-info-top{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:750}
-    .nt-info-icon{width:27px;height:27px;border-radius:9px;display:grid;place-items:center;background:#e7f6fb}
-    .nt-info-icon.steps{background:#fff0dc}.nt-info-value{font-size:23px;font-weight:850;letter-spacing:-.7px;margin:10px 0 2px}.nt-info-value small{font-size:12px}
-    .nt-muted{font-size:9px;color:#9a8a80}.nt-track.pale{height:5px;background:#f1eee9;margin-top:8px}
-    .nt-inline-action,.nt-link{border:0;background:none;color:#df792b;font-weight:800;font-size:10px;padding:9px 0 0}
-    .nt-weight-strip{display:flex;align-items:center;gap:11px;background:#fff;border:1px solid #f0e6dd;border-radius:17px;padding:13px 15px}
-    .nt-weight-icon{width:37px;height:37px;border-radius:13px;background:#fff0dd;display:grid;place-items:center;color:#dc792d}
-    .nt-weight-strip strong,.nt-weight-strip small{display:block}.nt-weight-strip strong{font-size:14px}.nt-weight-strip small{font-size:10px;color:#98877e;margin-top:3px}.nt-weight-arrow{margin-left:auto;color:#bd9b83;font-size:22px}
-    .meal-card.nt-meal{border-radius:18px;background:#fff;border:1px solid #f0e6dd;box-shadow:0 4px 14px #9e60300b;margin-bottom:9px}
-    .nt-add,.add-wide{background:linear-gradient(100deg,#f7a72f,#f16c50)!important;color:white!important;border-radius:17px!important;box-shadow:0 7px 18px #e8863430}
-    .nt-page-heading{display:flex;align-items:center;justify-content:space-between}
-    .nt-round-action{width:42px;height:42px;border:0;border-radius:15px;background:linear-gradient(135deg,#f8ae35,#f17750);color:white;font-size:23px;box-shadow:0 5px 13px #e88a3435}
-    .nt-search{height:48px;border:1px solid #efe4da;border-radius:15px;background:#fff;display:flex;align-items:center;gap:9px;padding:0 13px;box-shadow:0 4px 14px #9e60300a}
-    .nt-search>span{font-size:22px;color:#a28e80}.nt-search input{border:0!important;outline:0!important;box-shadow:none!important;flex:1;min-width:0;background:transparent!important;padding:0!important;font-size:12px}.nt-search kbd{font-size:9px;color:#a99a90;background:#faf4ee;border-radius:6px;padding:4px 6px}
-    .nt-filter-row{display:flex;align-items:center;gap:7px;margin:13px 0}
-    .nt-filter-row button{border:1px solid #eee3d9;background:#fff;border-radius:20px;padding:8px 12px;font-size:10px;font-weight:750;color:#8c7c72}
-    .nt-filter-row button.active{background:#f28a22;color:#fff;border-color:#f28a22}
-    .nt-filter-row>span{margin-left:auto;font-size:9px;color:#a3948a}
-    .nt-food-intro{display:flex;justify-content:space-between;align-items:center;background:#fff0d8;border:1px solid #f8e2c5;border-radius:17px;padding:12px 15px;margin:12px 0}
-    .nt-food-intro b,.nt-food-intro small{display:block}.nt-food-intro b{font-size:12px}.nt-food-intro small{font-size:10px;color:#9a806f;margin-top:4px}.nt-food-intro>span{font-size:26px}
-    .nt-food-list{display:grid;gap:9px}
-    .food-card.nt-food-card{display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:10px;align-items:center;padding:13px;border-radius:18px;background:#fff;border:1px solid #f0e6dd;box-shadow:0 4px 13px #9e60300b}
-    .nt-food-emoji{width:40px;height:40px;border-radius:13px;background:#fff2df;display:grid;place-items:center;font-size:21px}
-    .nt-food-main{min-width:0}.nt-food-main .food-name{font-size:12px}.nt-food-main .food-meta{font-size:9px;margin-top:3px}
-    .nt-food-macros{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.nt-food-macros span{font-size:8px;color:#9b8c82;background:#faf5f0;border-radius:5px;padding:3px 5px}
-    .nt-food-side{text-align:right;display:flex;flex-direction:column;align-items:flex-end}.nt-food-side>b{font-size:15px;color:#df792b}.nt-food-side>small{font-size:8px;color:#9b8c82}
-    .nt-food-side .favorite-btn{margin-top:4px;border:0;background:#fff5e9;border-radius:9px;color:#d98b43;width:27px;height:25px}
-    .nt-food-actions{grid-column:2/4;display:flex;gap:7px;justify-content:flex-end}
-    .nt-small-btn{border:1px solid #f0e5dc;background:#fffaf5;border-radius:8px;padding:5px 9px;font-size:9px;color:#9a7966}
-    .nt-week-switch{display:flex;align-items:center;justify-content:space-between;margin:12px 0 15px;background:#fff;border:1px solid #f0e6dd;border-radius:15px;padding:7px 10px}
-    .nt-week-switch strong{font-size:11px}
-    .nt-highlight-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:10px 0}
-    .nt-highlight{background:#fff;border:1px solid #f0e6dd;border-radius:18px;padding:14px;box-shadow:0 4px 13px #9e60300b}
-    .nt-highlight small,.nt-highlight span{display:block;color:#9a8a80;font-size:9px}.nt-highlight strong{display:block;font-size:22px;letter-spacing:-.7px;margin:7px 0 2px}.nt-highlight span{font-size:9px}
-    .nt-panel{background:#fff;border:1px solid #f0e6dd;border-radius:21px;padding:15px;margin:11px 0;box-shadow:0 4px 15px #9e60300b}
-    .nt-panel-heading h2{font-size:14px}.nt-panel-heading p{font-size:9px;color:#9a8a80;margin:4px 0 0}.nt-badge{background:#eef5e8;color:#75934f}.nt-badge.orange{background:#fff0df;color:#dd802e}
-    .nt-bars{height:150px;display:flex;align-items:flex-end;justify-content:space-around;gap:7px;padding:17px 3px 0}
-    .nt-bar-col{height:100%;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px;min-width:0}
-    .nt-bar-col>span{height:10px;font-size:8px;color:#9a8a80}
-    .nt-bar-bg{height:105px;width:min(25px,75%);border-radius:9px;background:#f8f0e9;display:flex;align-items:flex-end;overflow:hidden}
-    .nt-bar-bg i{display:block;width:100%;border-radius:9px;background:linear-gradient(180deg,#ffc05b,#ef8135);min-height:2px}
-    .nt-bar-bg i.over{background:linear-gradient(180deg,#f18b7d,#e75d50)}
-    .nt-bar-col>small{font-size:9px;color:#98877e}
-    .nt-legend{font-size:9px;color:#9a8a80;margin-top:10px;text-align:center}.nt-legend i{display:inline-block;width:7px;height:7px;border-radius:50%;background:#f19a3d;margin-right:4px}
-    .nt-weight-top{display:flex;align-items:baseline;justify-content:space-between;margin:15px 0 0}.nt-weight-top strong{font-size:25px}.nt-weight-top span{font-size:10px;color:#7b9b5f;font-weight:750}
-    .nt-weight-chart{width:100%;height:auto;display:block;margin-top:5px}.nt-weight-chart text{font-size:9px;fill:#9a8a80}
-    .nt-chart-empty{padding:35px 10px;text-align:center;color:#a09187;font-size:11px}
-    .nt-weight-foot{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #f4ece5;padding-top:8px;font-size:9px;color:#9a8a80}
-    .nt-goal-circles{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:15px}
-    .nt-goal-circle{width:82px;height:82px;max-width:100%;margin:auto;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--c) var(--p),#f1eee9 0);position:relative}
-    .nt-goal-circle:before{content:"";position:absolute;inset:7px;border-radius:50%;background:#fff}
-    .nt-goal-circle>div{position:relative;text-align:center}.nt-goal-circle b,.nt-goal-circle small{display:block}.nt-goal-circle b{font-size:13px}.nt-goal-circle small{font-size:8px;color:#9a8a80}
-    .nt-edit-goals{width:100%;border:0;border-radius:15px;padding:14px;background:#fff0dc;color:#d9782c;font-weight:800;font-size:11px;margin:7px 0}
-    .nt-profile-hero{display:flex;align-items:center;gap:15px;background:linear-gradient(120deg,#fff0d4,#ffe3d8);border:1px solid #f4ddc5;border-radius:23px;padding:16px;margin:12px 0}
-    .nt-profile-orb{width:84px;height:84px;border-radius:50%;background:#ffdfa5;display:grid;place-items:center;flex-shrink:0}.nt-profile-orb img{width:78px;height:78px;object-fit:contain}
-    .nt-profile-hero h2{font-size:19px;margin:4px 0}.nt-profile-hero p{font-size:9px;color:#92796b;margin:0 0 7px}.nt-version{font-size:8px;font-weight:850;letter-spacing:1px;color:#d8752c}
-    .nt-profile-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:12px 0 20px}
-    .nt-profile-summary>div{background:#fff;border:1px solid #f0e6dd;border-radius:14px;padding:10px 8px}.nt-profile-summary small,.nt-profile-summary strong{display:block}.nt-profile-summary small{font-size:8px;color:#9a8a80}.nt-profile-summary strong{font-size:12px;margin-top:5px}
-    .nt-profile-label{font-size:10px;font-weight:850;letter-spacing:.8px;color:#a28e80;text-transform:uppercase;margin:19px 3px 8px}
-    .nt-setting-row{width:100%;display:flex;align-items:center;gap:11px;text-align:left;border:1px solid #f0e6dd;background:#fff;border-radius:15px;padding:12px;margin-bottom:7px}
-    .nt-setting-icon{width:34px;height:34px;display:grid;place-items:center;border-radius:11px;font-size:17px}.nt-setting-icon.orange{background:#fff0db;color:#e5822d}.nt-setting-icon.peach{background:#ffe9e1;color:#e47759}.nt-setting-icon.blue{background:#e5f4f8;color:#58a9c2}.nt-setting-icon.yellow{background:#fff4d8;color:#d99c27}.nt-setting-icon.grey{background:#f2f0ed;color:#8b827b}
-    .nt-setting-row>span:nth-child(2){flex:1}.nt-setting-row b,.nt-setting-row small{display:block}.nt-setting-row b{font-size:11px}.nt-setting-row small{font-size:9px;color:#9a8a80;margin-top:3px}.nt-setting-row>strong{font-size:20px;color:#bda18c}
-    .nt-profile-note{font-size:9px;color:#9a8a80;line-height:1.5;text-align:center;margin:17px 12px}
-    .bottom-nav{background:rgba(255,252,248,.96)!important;border-top:1px solid #f0e5dc!important;box-shadow:0 -6px 20px #9e60300a}
-    .nav-btn{font-size:9px!important;color:#9a8f87!important;transition:all .18s ease}
-    .nav-btn.active{color:#e77d27!important}.nav-btn.active .nav-icon{background:#fff0d8!important;color:#e77d27!important;border-radius:12px;padding:5px 14px;margin-top:-5px}
-    button{transition:transform .15s ease,filter .15s ease,box-shadow .15s ease}
-    button:active{transform:scale(.96)}
-    .round-btn{background:#fff;border-color:#f0e5dc;color:#df7d2d}
-    .toolbar{margin:14px 0}
-    @media(max-width:370px){.nt-big-donut{width:122px;height:122px}.nt-calorie-layout{gap:13px}.nt-calorie-copy strong{font-size:23px}.nt-donut{width:65px;height:65px}.nt-food-macros span{font-size:7px}}
-    @media(min-width:600px){.app{border-radius:28px;overflow:hidden}.bottom-nav{border-radius:0 0 28px 28px}}
-  </style>
-
-
-  <style id="nutritrack-v3-calendar">
-    .calendar-card{border:1px solid #f0e5dc!important;border-radius:22px!important;background:#fff!important;box-shadow:0 6px 18px #9e60300c!important;padding:15px 11px!important}
-    .weekdays span{color:#a18e81!important;font-size:9px!important}
-    .day{border-radius:13px!important;color:#40332d!important;min-height:39px!important}
-    .day.selected{background:linear-gradient(135deg,#f7a62f,#f0784c)!important;color:#fff!important;box-shadow:0 4px 10px #e88a3430}
-    .day.today:not(.selected){background:#fff0d9!important;color:#d9772c!important;border:1px solid #f6d9b8!important}
-    .day-dot.green{background:#85a96b!important}.day-dot.amber{background:#f1b83e!important}.day-dot.red{background:#e97562!important}
-    .legend{font-size:9px!important;color:#95847a!important}
-    .selected-day-card{border:1px solid #f0e5dc!important;border-radius:19px!important;box-shadow:0 5px 15px #9e60300b!important}
-    .selected-day-card h3{font-size:13px!important;color:#332720}
-    .small-stat{background:#fff8f1!important;border-radius:12px;padding:9px!important}
-    .small-stat span{font-size:9px!important;color:#9b8b81!important}.small-stat strong{font-size:11px!important}
-  </style>
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#faf7f1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="NutriTrack">
+<meta name="description" content="NutriTrack — alimentação, atividade e evolução corporal.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon.png">
+<title>NutriTrack 4.0</title>
+<style>
+:root{--bg:#faf7f1;--paper:#fff;--ink:#292521;--muted:#898078;--line:#eee7de;--orange:#e99048;--orange2:#d97935;--yellow:#f5cf70;--coral:#e98b7d;--green:#77a98a;--red:#d96e62;--shadow:0 8px 28px rgba(91,67,44,.055);--radius:22px}
+*{box-sizing:border-box}html{background:var(--bg)}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;font-size:14px}button,input,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #f4c875;outline-offset:2px}
+.app{max-width:540px;margin:auto;min-height:100vh;padding-bottom:calc(88px + env(safe-area-inset-bottom));background:var(--bg);position:relative}
+header{padding:calc(16px + env(safe-area-inset-top)) 20px 10px;display:flex;justify-content:space-between;align-items:center}
+.brand{display:flex;align-items:center;gap:10px}.brand img{width:43px;height:43px;object-fit:contain;border-radius:13px}.brand strong{font-size:20px;letter-spacing:-.7px}.brand strong span{color:var(--orange2)}.date-label{font-size:11px;color:var(--muted);font-weight:650}
+main{padding:8px 17px 24px}.screen{display:none;animation:appear .18s ease}.screen.active{display:block}@keyframes appear{from{opacity:.55;transform:translateY(3px)}to{opacity:1;transform:none}}
+h1{font-size:27px;letter-spacing:-1px;margin:8px 0 4px}h2{font-size:17px;margin:0;letter-spacing:-.35px}h3{font-size:14px;margin:0}.desc{color:var(--muted);font-size:12px;margin:0 0 18px}.muted{color:var(--muted)}.tiny{font-size:10px;color:var(--muted)}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);margin-bottom:11px}.section-head{display:flex;align-items:center;justify-content:space-between;margin:22px 2px 11px}.link{border:0;background:none;color:var(--orange2);font-weight:750;font-size:12px;padding:6px}
+.hero{background:linear-gradient(135deg,#f6d990,#f2ad79);border-radius:25px;padding:19px;color:#392d25;position:relative;overflow:hidden}.hero:after{content:"";position:absolute;width:170px;height:170px;border:1px solid #ffffff65;border-radius:50%;right:-55px;top:-75px;box-shadow:0 0 0 22px #ffffff18,0 0 0 44px #ffffff12}.hero-top{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}.eyebrow{text-transform:uppercase;letter-spacing:1.1px;font-size:9px;font-weight:800;color:#795a43}.date-chip{font-size:10px;background:#ffffff70;padding:7px 10px;border-radius:30px}.hero-row{display:flex;align-items:center;gap:17px;margin-top:14px;position:relative;z-index:1}.ring{width:112px;height:112px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;background:conic-gradient(var(--orange2) var(--p,0%),#ffffff85 0);position:relative}.ring:before{content:"";position:absolute;inset:8px;border-radius:50%;background:#f8d59b}.ring-inner{position:relative;text-align:center}.ring-inner b{display:block;font-size:24px;letter-spacing:-1px}.ring-inner span{font-size:9px;color:#765b45}.hero-kcal{font-size:31px;font-weight:850;letter-spacing:-1.2px}.hero-kcal small{font-size:11px;font-weight:650}.remaining{font-size:11px;margin-top:5px;color:#715b49}.remaining b{font-size:14px}.bar{height:7px;border-radius:10px;background:#ffffff80;overflow:hidden;margin-top:15px;position:relative;z-index:1}.bar>i{display:block;height:100%;width:0;background:var(--orange2);border-radius:10px;transition:width .3s}.hero-foot{display:flex;justify-content:space-between;font-size:10px;color:#765b45;margin-top:7px;position:relative;z-index:1}
+.macro-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:11px}.macro{background:#fff;border:1px solid var(--line);border-radius:18px;padding:13px 10px;text-align:center}.macro-ring{width:55px;height:55px;border-radius:50%;margin:0 auto 8px;display:grid;place-items:center;background:conic-gradient(var(--c) var(--p),#f1eee9 0);position:relative}.macro-ring:before{content:"";position:absolute;inset:5px;background:#fff;border-radius:50%}.macro-ring b{position:relative;font-size:12px}.macro strong{display:block;font-size:12px}.macro small{font-size:10px;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.metric{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px}.metric-label{font-size:10px;color:var(--muted)}.metric-value{font-size:23px;font-weight:850;margin:7px 0 2px;letter-spacing:-.7px}.metric-foot{font-size:10px;color:var(--muted)}
+.meal{background:#fff;border:1px solid var(--line);border-radius:18px;padding:13px 14px;margin-bottom:9px}.meal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}.meal-title{font-weight:800;font-size:13px}.meal-kcal{font-size:11px;color:var(--orange2);font-weight:800}.food-row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid #f3eee8;font-size:11px}.food-row small{display:block;color:var(--muted);margin-top:3px}.food-row b{white-space:nowrap}
+.btn{border:0;border-radius:14px;padding:12px 15px;font-weight:800;font-size:12px;background:var(--orange);color:#fff;box-shadow:0 5px 13px #d9793520}.btn.secondary{background:#fff;color:var(--ink);border:1px solid var(--line);box-shadow:none}.btn.soft{background:#fff1df;color:#9c602d;box-shadow:none}.btn.full{width:100%}.btn.small{padding:9px 11px}.actions{display:flex;gap:8px;flex-wrap:wrap}
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:540px;display:grid;grid-template-columns:repeat(5,1fr);padding:9px 8px calc(9px + env(safe-area-inset-bottom));background:#fffF;border-top:1px solid var(--line);backdrop-filter:blur(18px);z-index:5}.nav button{border:0;background:none;color:#958d85;font-size:9px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 1px}.nav .ico{font-size:19px}.nav button.active{color:var(--orange2)}.nav button.active .ico{background:#fff0dc;border-radius:11px;padding:4px 13px;margin-top:-4px}
+.search{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:14px;background:#fff;margin:7px 0 11px}.tabs{display:flex;gap:6px;background:#f0ece5;padding:4px;border-radius:13px;margin:10px 0}.tabs button{flex:1;border:0;border-radius:10px;padding:9px 4px;background:none;color:var(--muted);font-size:10px;font-weight:750}.tabs button.active{background:#fff;color:var(--ink);box-shadow:0 2px 7px #55402a12}
+.food-card{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px;margin-bottom:8px}.food-card .food-info{flex:1;min-width:0}.food-card strong{font-size:12px}.food-card small{display:block;font-size:10px;color:var(--muted);margin-top:4px}.food-card .kcal{font-weight:800;color:var(--orange2);font-size:11px;white-space:nowrap}.round{border:0;background:#fff0dc;color:#9c602d;border-radius:10px;width:31px;height:31px;font-size:17px}
+.calendar{background:#fff;border:1px solid var(--line);border-radius:20px;padding:13px}.cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}.cal-grid .wd{font-size:9px;color:var(--muted);padding:5px 0}.day{border:0;background:none;border-radius:11px;min-height:43px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;color:var(--ink)}.day.muted{color:#c9c2ba}.day.selected{background:#fbe5c7}.day.today{box-shadow:inset 0 0 0 1px var(--orange)}.dot{width:5px;height:5px;border-radius:50%;background:transparent}.dot.done{background:var(--green)}
+.chart{width:100%;height:190px;display:block}.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:10px;color:var(--muted)}.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
+.field{margin:11px 0}.field label{display:block;font-size:11px;font-weight:750;margin-bottom:6px}.field input,.field select{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff;color:var(--ink)}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.modal-back{position:fixed;inset:0;background:#29252166;display:none;align-items:flex-end;justify-content:center;z-index:20;padding:12px}.modal-back.show{display:flex}.modal{background:var(--bg);width:100%;max-width:520px;max-height:88vh;overflow:auto;border-radius:24px 24px 17px 17px;padding:19px}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.close{border:0;background:#eee8df;border-radius:50%;width:30px;height:30px;font-size:19px}.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#292521;color:#fff;padding:11px 16px;border-radius:20px;font-size:11px;z-index:30;display:none;max-width:90%;text-align:center}
+.empty{text-align:center;padding:23px;color:var(--muted);font-size:12px}.pill{display:inline-block;border-radius:20px;padding:5px 9px;background:#f6eee3;color:#91683f;font-size:10px;font-weight:750}.profile-logo{display:flex;align-items:center;gap:14px}.profile-logo img{width:76px;height:76px;object-fit:contain;border-radius:18px}.profile-logo p{font-size:11px;color:var(--muted);line-height:1.5}
+@media(min-width:700px){body{padding:20px 0}.app{min-height:calc(100vh - 40px);border-radius:28px;overflow:hidden;box-shadow:0 12px 55px #58452a12}.nav{bottom:20px;border-radius:0 0 28px 28px}}
+</style>
 </head>
 <body>
 <div class="app">
-  <header>
-    <div class="brand"><div class="brandmark"><img src="mascot.png" alt="Mascote NutriTrack"></div><div class="brandname">Nutri<span>Track</span></div></div>
-    <div class="date-label" id="headerDate"></div>
-  </header>
-  <main>
-    <section class="screen active" id="screen-today"></section>
-    <section class="screen" id="screen-calendar"></section>
-    <section class="screen" id="screen-foods"></section>
-    <section class="screen" id="screen-stats"></section>
-    <section class="screen" id="screen-profile"></section>
-  </main>
-  <nav class="bottom-nav" aria-label="Navegação principal">
-    <button class="nav-btn active" data-tab="today"><span class="nav-icon">⌂</span><span>Início</span></button>
-    <button class="nav-btn" data-tab="foods"><span class="nav-icon">♧</span><span>Alimentação</span></button>
-    <button class="nav-btn" data-tab="stats"><span class="nav-icon">▥</span><span>Progresso</span></button>
-    <button class="nav-btn" data-tab="calendar"><span class="nav-icon">▦</span><span>Calendário</span></button>
-    <button class="nav-btn" data-tab="profile"><span class="nav-icon">♙</span><span>Perfil</span></button>
-  </nav>
+<header><div class="brand"><img src="icon.png" alt="Logótipo NutriTrack"><strong>Nutri<span>Track</span></strong></div><div class="date-label" id="headerDate"></div></header>
+<main>
+<section class="screen active" id="screen-home"></section>
+<section class="screen" id="screen-food"></section>
+<section class="screen" id="screen-calendar"></section>
+<section class="screen" id="screen-progress"></section>
+<section class="screen" id="screen-profile"></section>
+</main>
+<nav class="nav">
+<button data-tab="home" class="active"><span class="ico">⌂</span>Início</button>
+<button data-tab="food"><span class="ico">◉</span>Alimentação</button>
+<button data-tab="calendar"><span class="ico">▦</span>Calendário</button>
+<button data-tab="progress"><span class="ico">↗</span>Progresso</button>
+<button data-tab="profile"><span class="ico">☻</span>Perfil</button>
+</nav>
 </div>
-<div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true"><div class="modal" id="modal"></div></div>
-<div class="toast" id="toast"></div>
+<div class="modal-back" id="modalBack"><div class="modal" id="modal"></div></div><div class="toast" id="toast"></div>
 <script>
-(()=>{
-  'use strict';
-  const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-  const STORAGE='nutritrack-v1';
-  const todayKey=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
-  const dateFromKey=k=>{const [y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d)};
-  const keyFromDate=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-  const escapeHtml=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const defaults=[
-    {id:'f1',name:'Banana',kcal:89,category:'Fruta'}, {id:'f2',name:'Maçã',kcal:52,category:'Fruta'},
-    {id:'f3',name:'Batata cozida',kcal:87,category:'Legumes'}, {id:'f4',name:'Batata doce cozida',kcal:76,category:'Legumes'},
-    {id:'f5',name:'Salmão grelhado',kcal:206,category:'Peixe'}, {id:'f6',name:'Atum ao natural',kcal:116,category:'Peixe'},
-    {id:'f7',name:'Iogurte natural',kcal:61,category:'Laticínios'}, {id:'f8',name:'Pão de trigo',kcal:265,category:'Cereais'},
-    {id:'f9',name:'Amêndoas',kcal:579,category:'Frutos secos'}, {id:'f10',name:'Abacate',kcal:160,category:'Fruta'}
-  ];
-  const load=()=>{try{return JSON.parse(localStorage.getItem(STORAGE))}catch(e){return null}};
-  let state=load()||{foods:defaults,entries:[],steps:{},goalCalories:2400,goalSteps:10000};
-  if(!state.foods)state.foods=defaults;if(!state.entries)state.entries=[];if(!state.steps)state.steps={};if(!state.water)state.water={};if(!state.weights)state.weights=[];if(!state.goalWater)state.goalWater=2000;state.foods.forEach(f=>{if(f.favorite===undefined)f.favorite=false;if(f.protein===undefined)f.protein=0;if(f.carbs===undefined)f.carbs=0;if(f.fat===undefined)f.fat=0;if(f.fiber===undefined)f.fiber=0});
-  let activeTab='today',selectedDate=todayKey(),calendarMonth=dateFromKey(todayKey()).getMonth(),calendarYear=dateFromKey(todayKey()).getFullYear(),statsOffset=0,searchTerm='',favoritesOnly=false;
-  const persist=()=>localStorage.setItem(STORAGE,JSON.stringify(state));
-  const fmt=n=>Math.round(Number(n)||0).toLocaleString('pt-PT');
-  const prettyDate=(key,opts={weekday:'long',day:'numeric',month:'long'})=>new Intl.DateTimeFormat('pt-PT',opts).format(dateFromKey(key));
-  const entriesFor=key=>state.entries.filter(e=>e.date===key);
-  const totalFor=key=>entriesFor(key).reduce((a,e)=>a+e.kcal,0);
-  const stepsFor=key=>Number(state.steps[key]||0);
-  const waterFor=key=>Number(state.water[key]||0);
-  const macrosFor=key=>entriesFor(key).reduce((a,e)=>({protein:a.protein+(e.protein||0),carbs:a.carbs+(e.carbs||0),fat:a.fat+(e.fat||0),fiber:a.fiber+(e.fiber||0)}),{protein:0,carbs:0,fat:0,fiber:0});
-  const weightFor=key=>{const a=state.weights.filter(x=>x.date<=key).sort((x,y)=>y.date.localeCompare(x.date));return a[0]?.kg||null};
-  const meals=[['breakfast','Pequeno-almoço','☀️'],['lunch','Almoço','🥗'],['snack','Lanche','🍏'],['dinner','Jantar','🌙']];
-  function save(){persist();render()}
-  function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.classList.remove('show'),1900)}
-  function setTab(tab){activeTab=tab;$$('.screen').forEach(s=>s.classList.remove('active'));$('#screen-'+tab).classList.add('active');$$('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));render()}
-  function render(){ $('#headerDate').textContent=new Intl.DateTimeFormat('pt-PT',{day:'numeric',month:'short'}).format(new Date()).toUpperCase();renderToday();renderCalendar();renderFoods();renderStats();renderProfile(); }
-  function renderToday(){
-    const key=selectedDate,used=totalFor(key),goal=Number(state.goalCalories)||2400,remaining=goal-used,pct=Math.min(100,Math.round(used/goal*100));
-    const d=prettyDate(key,{weekday:'long',day:'numeric',month:'long'}),isToday=key===todayKey(),m=macrosFor(key);
-    const macroGoals=[150,265,75],macroItems=[['Proteína',m.protein,macroGoals[0],'#ef765d'],['Hidratos',m.carbs,macroGoals[1],'#f5b52e'],['Gordura',m.fat,macroGoals[2],'#86a96d']];
-    const water=waterFor(key),steps=stepsFor(key),w=weightFor(key);
-    const donut=(value,target,color,label,unit='g')=>`<div class="nt-donut-card"><div class="nt-donut" style="--arc:${Math.min(100,target?value/target*100:0)}%;--tone:${color}"><div><b>${fmt(value)}${unit}</b><small>${Math.round(target?Math.min(100,value/target*100):0)}%</small></div></div><strong>${label}</strong><span>${fmt(target)} ${unit}</span></div>`;
-    $('#screen-today').innerHTML=`
-      <div class="nt-greeting"><div><div class="greeting">${isToday?'Bom dia!':'O teu diário'} 👋</div><p class="screen-desc">${escapeHtml(d.charAt(0).toUpperCase()+d.slice(1))} · ${isToday?'Um passo de cada vez.':'Consulta os teus registos.'}</p></div><img src="mascot.png" alt="Bolacha, mascote NutriTrack"></div>
-      <div class="nt-calorie-card"><div class="nt-card-head"><div><span class="nt-kicker">O teu dia</span><h2>Resumo de calorias</h2></div><span class="nt-date-pill">${isToday?'HOJE':'HISTÓRICO'}</span></div>
-        <div class="nt-calorie-layout"><div class="nt-big-donut" style="--arc:${pct}%;"><div><strong>${fmt(used)}</strong><span>kcal consumidas</span></div></div><div class="nt-calorie-copy"><strong>${fmt(Math.abs(remaining))}</strong><span>${remaining>=0?'kcal disponíveis':'kcal acima do objetivo'}</span><small>Objetivo: ${fmt(goal)} kcal</small></div></div>
-        <div class="nt-track"><i style="width:${pct}%"></i></div><div class="nt-track-labels"><span>0 kcal</span><b>${pct}% do objetivo</b><span>${fmt(goal)} kcal</span></div>
-      </div>
-      <div class="nt-section-title"><div><h2>Macronutrientes</h2><p>Distribuição diária</p></div><span class="nt-section-icon">◉</span></div>
-      <div class="nt-donut-grid">${macroItems.map(([n,v,g,c])=>donut(v,g,c,n)).join('')}</div>
-      <div class="nt-two-metrics">
-        <div class="nt-info-card"><div class="nt-info-top"><span class="nt-info-icon water">💧</span><span>Hidratação</span></div><div class="nt-info-value">${(water/1000).toLocaleString('pt-PT',{maximumFractionDigits:1})}<small> L</small></div><div class="nt-muted">${fmt(water)} / ${fmt(state.goalWater)} ml</div><div class="nt-track pale"><i style="width:${Math.min(100,water/state.goalWater*100)}%;background:#54b7d4"></i></div><button class="nt-inline-action" data-action="water-add">＋ Adicionar 250 ml</button></div>
-        <div class="nt-info-card"><div class="nt-info-top"><span class="nt-info-icon steps">👟</span><span>Passos</span></div><div class="nt-info-value">${fmt(steps)}</div><div class="nt-muted">Objetivo ${fmt(state.goalSteps)}</div><div class="nt-track pale"><i style="width:${Math.min(100,steps/state.goalSteps*100)}%;background:#f29a36"></i></div><button class="nt-inline-action" data-action="steps">＋ Registar passos</button></div>
-      </div>
-      <div class="nt-section-title"><div><h2>O teu peso</h2><p>Último registo para este dia</p></div><button class="nt-link" data-action="weight">＋ Registar</button></div>
-      <div class="nt-weight-strip"><span class="nt-weight-icon">⚖</span><div><strong>${w?fmt(w)+' kg':'Ainda sem registo'}</strong><small>${w?'Peso corporal':'Regista o teu peso para acompanhar a evolução semanal'}</small></div><span class="nt-weight-arrow">›</span></div>
-      <div class="nt-section-title"><div><h2>As minhas refeições</h2><p>O que consumiste hoje</p></div><button class="nt-link" data-action="add">＋ Adicionar</button></div>
-      <div class="meal-list">${meals.map(([id,name,emoji])=>{const list=entriesFor(key).filter(e=>e.meal===id),total=list.reduce((a,e)=>a+e.kcal,0);return `<div class="meal-card nt-meal"><div class="meal-header"><div class="meal-title"><span>${emoji}</span>${name}</div><div class="meal-total">${fmt(total)} kcal</div></div>${list.length?list.map(e=>`<div class="food-line"><div>${escapeHtml(e.name)}<small>${fmt(e.grams)} g</small></div><div class="line-actions"><span class="line-kcal">${fmt(e.kcal)} kcal</span><button class="icon-btn" data-edit-entry="${e.id}" aria-label="Editar">✎</button><button class="icon-btn" data-delete-entry="${e.id}" aria-label="Eliminar">×</button></div></div>`).join(''):`<div class="meal-empty">Ainda não adicionaste alimentos.</div>`}</div>`}).join('')}</div>
-      <button class="add-wide nt-add" data-action="add">＋ Adicionar alimento</button>`;
-  }
-  function renderCalendar(){
-    const d=new Date(calendarYear,calendarMonth,1),first=(d.getDay()+6)%7,days=new Date(calendarYear,calendarMonth+1,0).getDate(),prevDays=new Date(calendarYear,calendarMonth,0).getDate();
-    const title=new Intl.DateTimeFormat('pt-PT',{month:'long',year:'numeric'}).format(d);
-    let cells='';for(let i=0;i<42;i++){let day,date,muted=false;if(i<first){day=prevDays-first+i+1;date=new Date(calendarYear,calendarMonth-1,day);muted=true}else if(i>=first+days){day=i-first-days+1;date=new Date(calendarYear,calendarMonth+1,day);muted=true}else{day=i-first+1;date=new Date(calendarYear,calendarMonth,day)}const key=keyFromDate(date),t=totalFor(key),has=entriesFor(key).length>0;let status=has?(t>state.goalCalories?'red':t>=state.goalCalories*.85?'green':'amber'):'';cells+=`<button class="day ${muted?'muted':''} ${key===selectedDate?'selected':''} ${key===todayKey()?'today':''}" data-day="${key}"><span>${day}</span><i class="day-dot ${status}"></i></button>`}
-    $('#screen-calendar').innerHTML=`<h1 class="screen-title">Calendário</h1><p class="screen-desc">Consulta o teu histórico alimentar e de atividade.</p><div class="toolbar"><div class="month-control"><button class="round-btn" data-month="-1">‹</button><strong>${title.charAt(0).toUpperCase()+title.slice(1)}</strong><button class="round-btn" data-month="1">›</button></div><button class="text-btn" data-action="today">Hoje</button></div><div class="calendar-card"><div class="weekdays">${['S','T','Q','Q','S','S','D'].map(x=>`<span>${x}</span>`).join('')}</div><div class="calendar-grid">${cells}</div></div><div class="legend"><span><i style="background:#84a96c"></i>Dentro do objetivo</span><span><i style="background:#dda84f"></i>Abaixo do objetivo</span><span><i style="background:#d56f62"></i>Acima do objetivo</span></div><div class="card selected-day-card"><div style="display:flex;justify-content:space-between;align-items:center"><h3>${prettyDate(selectedDate,{weekday:'long',day:'numeric',month:'long'})}</h3><button class="text-btn" data-action="open-selected">Ver diário →</button></div><div class="selected-day-stats"><div class="small-stat"><span>Calorias</span><strong>${fmt(totalFor(selectedDate))} kcal</strong></div><div class="small-stat"><span>Passos</span><strong>${fmt(stepsFor(selectedDate))}</strong></div><div class="small-stat"><span>Água</span><strong>${fmt(waterFor(selectedDate))} ml</strong></div><div class="small-stat"><span>Peso</span><strong>${weightFor(selectedDate)?fmt(weightFor(selectedDate))+' kg':'—'}</strong></div></div></div>`;
-  }
-  function renderFoods(){
-    const list=state.foods.filter(f=>(!favoritesOnly||f.favorite)&&f.name.toLowerCase().includes(searchTerm.toLowerCase()));
-    $('#screen-foods').innerHTML=`<div class="nt-page-heading"><div><h1 class="screen-title">Alimentação</h1><p class="screen-desc">A tua biblioteca de alimentos.</p></div><button class="nt-round-action" data-action="new-food">＋</button></div>
-      <label class="nt-search"><span>⌕</span><input id="foodSearch" placeholder="Pesquisar alimento..." value="${escapeHtml(searchTerm)}"><kbd>⌘ K</kbd></label>
-      <div class="nt-filter-row"><button class="${!favoritesOnly?'active':''}" data-action="favorites">Todos os alimentos</button><button class="${favoritesOnly?'active':''}" data-action="favorites">♡ Favoritos</button><span>${list.length} itens</span></div>
-      <div class="nt-food-intro"><div><b>O que vais comer?</b><small>Escolhe um alimento para o registar no teu diário.</small></div><span>🥗</span></div>
-      <div class="food-list nt-food-list">${list.length?list.map((f,i)=>`<div class="food-card nt-food-card"><div class="nt-food-emoji">${['🥑','🍎','🥕','🍓','🥜','🥣'][i%6]}</div><div class="nt-food-main"><div class="food-name">${escapeHtml(f.name)}</div><div class="food-meta">${escapeHtml(f.category||'Alimento')} · por 100 g</div><div class="nt-food-macros"><span>${fmt(f.protein||0)}g proteína</span><span>${fmt(f.carbs||0)}g hidratos</span><span>${fmt(f.fat||0)}g gordura</span></div></div><div class="nt-food-side"><b>${fmt(f.kcal)}</b><small>kcal</small><button class="favorite-btn ${f.favorite?'on':''}" data-favorite="${f.id}" aria-label="Favorito">${f.favorite?'★':'☆'}</button></div><div class="nt-food-actions"><button class="nt-small-btn" data-edit-food="${f.id}">Editar</button><button class="nt-small-btn" data-delete-food="${f.id}">Eliminar</button></div></div>`).join(''):`<div class="empty-state"><div class="empty-icon">⌕</div>Não encontrámos alimentos com esse nome.</div>`}</div>
-      <button class="add-wide nt-add" data-action="new-food">＋ Criar alimento</button><p class="subtle" style="font-size:10px;margin:14px 3px">Confirma sempre os valores nutricionais no rótulo do produto.</p>`;
-  }
-  function weekStart(offset=0){const d=dateFromKey(todayKey());const wd=(d.getDay()+6)%7;d.setDate(d.getDate()-wd+offset*7);return d}
-  function renderStats(){
-    const start=weekStart(statsOffset),keys=Array.from({length:7},(_,i)=>{const d=new Date(start);d.setDate(d.getDate()+i);return keyFromDate(d)}),totals=keys.map(totalFor),stepVals=keys.map(stepsFor),sum=totals.reduce((a,b)=>a+b,0),active=totals.filter(v=>v>0).length,avg=active?sum/active:0,avgSteps=Math.round(stepVals.reduce((a,b)=>a+b,0)/7),onGoal=totals.filter(v=>v>0&&v<=state.goalCalories).length;
-    const title=`${new Intl.DateTimeFormat('pt-PT',{day:'numeric',month:'short'}).format(dateFromKey(keys[0]))} – ${new Intl.DateTimeFormat('pt-PT',{day:'numeric',month:'short'}).format(dateFromKey(keys[6]))}`;
-    const max=Math.max(state.goalCalories,...totals,1),bars=keys.map((k,i)=>`<div class="nt-bar-col"><span>${totals[i]?fmt(totals[i]):''}</span><div class="nt-bar-bg"><i class="${totals[i]>state.goalCalories?'over':''}" style="height:${Math.max(2,totals[i]/max*100)}%"></i></div><small>${['S','T','Q','Q','S','S','D'][i]}</small></div>`).join('');
-    const wkeys=keys,weights=wkeys.map(k=>{const x=state.weights.find(v=>v.date===k);return x?Number(x.kg):null}),known=weights.map((v,i)=>v===null?null:{v,i}).filter(Boolean),latest=state.weights.slice().sort((a,b)=>a.date.localeCompare(b.date)).slice(-1)[0],prev=state.weights.slice().sort((a,b)=>a.date.localeCompare(b.date)).slice(-2)[0],weekDelta=known.length>1?known[known.length-1].v-known[0].v:null;
-    let weightChart='<div class="nt-chart-empty">Regista o teu peso em vários dias para veres a evolução semanal.</div>';
-    if(known.length){const vals=known.map(x=>x.v),lo=Math.min(...vals)-.4,hi=Math.max(...vals)+.4,r=Math.max(.8,hi-lo),pts=known.map(x=>[18+x.i*47,112-((x.v-lo)/r)*82]),line=pts.map(p=>p.join(',')).join(' ');weightChart=`<svg class="nt-weight-chart" viewBox="0 0 340 145" role="img" aria-label="Evolução semanal do peso">${[30,70,110].map(y=>`<line x1="14" y1="${y}" x2="326" y2="${y}" stroke="#f1e6dc" stroke-dasharray="4 5"/>`).join('')}<polyline points="${line}" fill="none" stroke="#ed812e" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>${pts.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="5" fill="#fff" stroke="#ed812e" stroke-width="3"/>`).join('')}${['S','T','Q','Q','S','S','D'].map((d,i)=>`<text x="${18+i*47}" y="137" text-anchor="middle">${d}</text>`).join('')}</svg>`;}
-    const pct=(v,g)=>Math.min(100,g?Math.round(v/g*100):0);
-    $('#screen-stats').innerHTML=`<h1 class="screen-title">Progresso</h1><p class="screen-desc">Os teus resultados, semana após semana.</p>
-      <div class="nt-week-switch"><button class="round-btn" data-stats-week="-1">‹</button><strong>${title}</strong><button class="round-btn" data-stats-week="1" ${statsOffset>=0?'disabled':''}>›</button></div>
-      <div class="nt-highlight-grid"><div class="nt-highlight"><small>Calorias esta semana</small><strong>${fmt(sum)}</strong><span>kcal registadas</span></div><div class="nt-highlight"><small>Média de passos</small><strong>${fmt(avgSteps)}</strong><span>passos por dia</span></div></div>
-      <div class="nt-panel"><div class="nt-panel-heading"><div><h2>Consumo de calorias</h2><p>Comparação com o teu objetivo diário</p></div><span class="nt-badge">7 DIAS</span></div><div class="nt-bars">${bars}</div><div class="nt-legend"><i></i> Consumo <b>—</b> objetivo ${fmt(state.goalCalories)} kcal</div></div>
-      <div class="nt-panel"><div class="nt-panel-heading"><div><h2>Evolução do peso</h2><p>Registos de segunda a domingo</p></div><span class="nt-badge orange">PESO</span></div><div class="nt-weight-top"><strong>${latest?Number(latest.kg).toFixed(1).replace('.',',')+' kg':'—'}</strong><span>${weekDelta===null?'Sem comparação':`${weekDelta>0?'+':''}${weekDelta.toFixed(1).replace('.',',')} kg esta semana`}</span></div>${weightChart}<div class="nt-weight-foot"><span>Último registo: ${latest?prettyDate(latest.date,{day:'numeric',month:'short'}):'—'}</span><button class="nt-link" data-action="weight">＋ Registar peso</button></div></div>
-      <div class="nt-panel"><div class="nt-panel-heading"><div><h2>Objetivos da semana</h2><p>Consistência é o que conta</p></div></div><div class="nt-goal-circles"><div class="nt-goal-circle" style="--p:${pct(onGoal,7)}%;--c:#87a96c"><div><b>${onGoal}/7</b><small>Calorias</small></div></div><div class="nt-goal-circle" style="--p:${pct(stepVals.filter(v=>v>=state.goalSteps).length,7)}%;--c:#ed9a39"><div><b>${stepVals.filter(v=>v>=state.goalSteps).length}/7</b><small>Passos</small></div></div><div class="nt-goal-circle" style="--p:${pct(keys.filter(k=>waterFor(k)>=state.goalWater).length,7)}%;--c:#62b5d1"><div><b>${keys.filter(k=>waterFor(k)>=state.goalWater).length}/7</b><small>Água</small></div></div></div></div>
-      <div class="nt-highlight-grid"><div class="nt-highlight"><small>Dias com registos</small><strong>${active}/7</strong><span>atividade alimentar</span></div><div class="nt-highlight"><small>Água consumida</small><strong>${(keys.reduce((a,k)=>a+waterFor(k),0)/1000).toLocaleString('pt-PT',{maximumFractionDigits:1})} L</strong><span>total semanal</span></div></div><button class="nt-edit-goals" data-action="goal">⚙ Ajustar os meus objetivos</button>`;
-  }
-  function renderProfile(){
-    const latest=state.weights.slice().sort((a,b)=>a.date.localeCompare(b.date)).slice(-1)[0];
-    $('#screen-profile').innerHTML=`<h1 class="screen-title">Perfil</h1><p class="screen-desc">Personaliza a tua experiência NutriTrack.</p>
-      <div class="nt-profile-hero"><div class="nt-profile-orb"><img src="mascot.png" alt="Mascote Bolacha"></div><div><span class="nt-kicker">BOLACHA & LAU</span><h2>NutriTrack</h2><p>Pequenos passos, grandes resultados.</p><span class="nt-version">VERSÃO 3.0</span></div></div>
-      <div class="nt-profile-summary"><div><small>Último peso</small><strong>${latest?Number(latest.kg).toFixed(1).replace('.',',')+' kg':'—'}</strong></div><div><small>Objetivo diário</small><strong>${fmt(state.goalCalories)} kcal</strong></div><div><small>Passos</small><strong>${fmt(state.goalSteps)}</strong></div></div>
-      <div class="nt-profile-label">Os meus objetivos</div><button class="nt-setting-row" data-action="goal"><span class="nt-setting-icon orange">◎</span><span><b>Objetivos diários</b><small>Calorias, passos e hidratação</small></span><strong>›</strong></button>
-      <div class="nt-profile-label">Dados pessoais</div><button class="nt-setting-row" data-action="weight"><span class="nt-setting-icon peach">⚖</span><span><b>Peso corporal</b><small>${latest?`Último registo: ${Number(latest.kg).toFixed(1).replace('.',',')} kg`:'Regista e acompanha o teu peso'}</small></span><strong>›</strong></button>
-      <button class="nt-setting-row" data-action="backup"><span class="nt-setting-icon blue">☁</span><span><b>Cópia de segurança</b><small>Exportar os teus registos em segurança</small></span><strong>›</strong></button>
-      <div class="nt-profile-label">Aplicação</div><button class="nt-setting-row" data-action="goal"><span class="nt-setting-icon yellow">⚙</span><span><b>Preferências</b><small>Gerir os teus objetivos e definições</small></span><strong>›</strong></button>
-      <button class="nt-setting-row" data-action="about"><span class="nt-setting-icon grey">ⓘ</span><span><b>Sobre a NutriTrack</b><small>Bolacha & Lau · versão 3.0</small></span><strong>›</strong></button>
-      <p class="nt-profile-note">Os teus registos continuam guardados neste dispositivo. Faz cópias de segurança regularmente.</p>`;
-  }
-  function openModal(content){$('#modal').innerHTML=content;$('#modalBackdrop').classList.add('open')}
-  function closeModal(){$('#modalBackdrop').classList.remove('open')}
-  function openFoodModal(id=null){const f=id?state.foods.find(x=>x.id===id):null;openModal(`<div class="modal-head"><h3>${f?'Editar alimento':'Novo alimento'}</h3><button class="close-btn" data-close>×</button></div><form id="foodForm"><div class="field"><label for="foodName">Nome do alimento</label><input id="foodName" required maxlength="60" placeholder="Ex.: Arroz cozido" value="${escapeHtml(f?.name||'')}"></div><div class="field-row"><div class="field"><label for="foodKcal">Calorias por 100 g</label><input id="foodKcal" required type="number" min="0" max="10000" step="0.1" placeholder="Ex.: 130" value="${f?.kcal??''}"></div><div class="field"><label for="foodCategory">Categoria</label><select id="foodCategory">${['Fruta','Legumes','Carne','Peixe','Laticínios','Cereais','Frutos secos','Bebidas','Outros'].map(c=>`<option ${f?.category===c?'selected':''}>${c}</option>`).join('')}</select></div></div><div class="field-row"><div class="field"><label for="foodProtein">Proteína / 100 g</label><input id="foodProtein" type="number" min="0" max="100" step="0.1" value="${f?.protein??0}"></div><div class="field"><label for="foodCarbs">Hidratos / 100 g</label><input id="foodCarbs" type="number" min="0" max="100" step="0.1" value="${f?.carbs??0}"></div></div><div class="field-row"><div class="field"><label for="foodFat">Gordura / 100 g</label><input id="foodFat" type="number" min="0" max="100" step="0.1" value="${f?.fat??0}"></div><div class="field"><label for="foodFiber">Fibra / 100 g</label><input id="foodFiber" type="number" min="0" max="100" step="0.1" value="${f?.fiber??0}"></div></div><button class="primary-btn" type="submit">${f?'Guardar alterações':'Guardar alimento'}</button></form>`);
-    $('#foodForm').onsubmit=e=>{e.preventDefault();const name=$('#foodName').value.trim(),kcal=Number($('#foodKcal').value),category=$('#foodCategory').value,protein=Number($('#foodProtein').value)||0,carbs=Number($('#foodCarbs').value)||0,fat=Number($('#foodFat').value)||0,fiber=Number($('#foodFiber').value)||0;if(!name||!Number.isFinite(kcal)||kcal<0)return;const data={name,kcal,category,protein,carbs,fat,fiber};if(f){Object.assign(f,data)}else state.foods.unshift({id:crypto.randomUUID(),...data,favorite:false});save();closeModal();toast(f?'Alimento actualizado':'Alimento guardado')};}
-  function openLogModal(entryId=null){const e=entryId?state.entries.find(x=>x.id===entryId):null;const food=e?state.foods.find(f=>f.id===e.foodId):null;const foodOptions=state.foods.map(f=>`<option value="${f.id}" ${e?.foodId===f.id?'selected':''}>${escapeHtml(f.name)} · ${fmt(f.kcal)} kcal/100 g</option>`).join('');openModal(`<div class="modal-head"><h3>${e?'Editar registo':'Adicionar alimento'}</h3><button class="close-btn" data-close>×</button></div><form id="logForm"><div class="field"><label for="logFood">Alimento</label><select id="logFood" required>${foodOptions}</select></div><div class="field-row"><div class="field"><label for="logGrams">Quantidade (g)</label><input id="logGrams" type="number" min="1" max="10000" step="1" required value="${e?.grams??100}"></div><div class="field"><label for="logMeal">Refeição</label><select id="logMeal">${meals.map(([id,n])=>`<option value="${id}" ${e?.meal===id?'selected':''}>${n}</option>`).join('')}</select></div></div><div class="field"><label for="logDate">Data</label><input id="logDate" type="date" value="${e?.date||selectedDate}" required></div><div class="calc-preview"><span>Cálculo automático<br><small id="calcFormula">— kcal por 100 g</small></span><strong id="calcTotal">0 kcal</strong></div><button class="primary-btn" type="submit">${e?'Guardar registo':'Adicionar ao diário'}</button><button class="secondary-btn" type="button" data-new-food-inline>＋ Criar um alimento novo</button></form>`);
-    const update=()=>{const f=state.foods.find(x=>x.id===$('#logFood').value),g=Number($('#logGrams').value)||0,k=f?Math.round(f.kcal*g/100):0;$('#calcFormula').textContent=f?`${fmt(f.kcal)} kcal × ${fmt(g)} g ÷ 100 · P ${fmt((f.protein||0)*g/100)} g`: 'Selecciona um alimento';$('#calcTotal').textContent=`${fmt(k)} kcal`};$('#logFood').onchange=update;$('#logGrams').oninput=update;update();
-    $('#logForm').onsubmit=ev=>{ev.preventDefault();const f=state.foods.find(x=>x.id===$('#logFood').value),grams=Number($('#logGrams').value),date=$('#logDate').value,meal=$('#logMeal').value;if(!f||grams<=0||!date)return;const data={foodId:f.id,name:f.name,grams,meal,date,kcal:Math.round(f.kcal*grams/100),protein:(f.protein||0)*grams/100,carbs:(f.carbs||0)*grams/100,fat:(f.fat||0)*grams/100,fiber:(f.fiber||0)*grams/100};if(e)Object.assign(e,data);else state.entries.push({id:crypto.randomUUID(),...data});selectedDate=date;save();closeModal();toast(e?'Registo actualizado':'Alimento adicionado')};
-    $('#modal').querySelector('[data-new-food-inline]').onclick=()=>{openFoodModal();};
-  }
-  function openStepsModal(){openModal(`<div class="modal-head"><h3>Registar passos</h3><button class="close-btn" data-close>×</button></div><form id="stepsForm"><div class="field"><label for="stepsValue">Número de passos</label><input id="stepsValue" type="number" min="0" max="200000" step="1" value="${stepsFor(selectedDate)}" required></div><div class="field"><label for="stepsDate">Data</label><input id="stepsDate" type="date" value="${selectedDate}" required></div><button class="primary-btn" type="submit">Guardar passos</button></form>`);$('#stepsForm').onsubmit=e=>{e.preventDefault();const n=Number($('#stepsValue').value),d=$('#stepsDate').value;if(n<0||!d)return;state.steps[d]=n;selectedDate=d;save();closeModal();toast('Passos guardados')};}
-  function openWaterModal(amount=waterFor(selectedDate)){openModal(`<div class="modal-head"><h3>Registar água</h3><button class="close-btn" data-close>×</button></div><form id="waterForm"><div class="field"><label for="waterValue">Quantidade (ml)</label><input id="waterValue" type="number" min="0" max="10000" step="50" value="${amount}" required></div><div class="field"><label for="waterDate">Data</label><input id="waterDate" type="date" value="${selectedDate}" required></div><button class="primary-btn" type="submit">Guardar água</button></form>`);$('#waterForm').onsubmit=e=>{e.preventDefault();const n=Number($('#waterValue').value),d=$('#waterDate').value;if(n<0||!d)return;state.water[d]=n;selectedDate=d;save();closeModal();toast('Água registada')};}
-  function openWeightModal(){openModal(`<div class="modal-head"><h3>Registar peso</h3><button class="close-btn" data-close>×</button></div><form id="weightForm"><div class="field"><label for="weightValue">Peso (kg)</label><input id="weightValue" type="number" min="20" max="350" step="0.1" placeholder="Ex.: 74.0" required></div><div class="field"><label for="weightDate">Data</label><input id="weightDate" type="date" value="${selectedDate}" required></div><button class="primary-btn" type="submit">Guardar peso</button></form><p class="subtle" style="font-size:10px">O peso é guardado por data. O histórico anterior mantém-se.</p>`);$('#weightForm').onsubmit=e=>{e.preventDefault();const kg=Number($('#weightValue').value),date=$('#weightDate').value;if(kg<20||kg>350||!date)return;state.weights=state.weights.filter(x=>x.date!==date);state.weights.push({date,kg});save();closeModal();toast('Peso guardado')};}
-  function openGoalModal(){openModal(`<div class="modal-head"><h3>Os teus objectivos</h3><button class="close-btn" data-close>×</button></div><form id="goalForm"><div class="field"><label for="goalKcal">Objectivo diário de calorias (kcal)</label><input id="goalKcal" type="number" min="500" max="10000" value="${state.goalCalories}" required></div><div class="field"><label for="goalSteps">Objectivo diário de passos</label><input id="goalSteps" type="number" min="100" max="100000" value="${state.goalSteps}" required></div><button class="primary-btn" type="submit">Guardar objectivos</button><p class="subtle" style="font-size:10px;line-height:1.5">Define os teus próprios objectivos. O valor de calorias inicial é apenas um exemplo, não uma recomendação nutricional.</p></form>`);$('#goalForm').onsubmit=e=>{e.preventDefault();state.goalCalories=Number($('#goalKcal').value);state.goalSteps=Number($('#goalSteps').value);save();closeModal();toast('Objectivos actualizados')};}
-  function handleAction(action){if(action==='add')openLogModal();if(action==='new-food')openFoodModal();if(action==='steps')openStepsModal();if(action==='water-add')openWaterModal(waterFor(selectedDate)+250);if(action==='water-custom')openWaterModal();if(action==='weight')openWeightModal();if(action==='favorites'){favoritesOnly=!favoritesOnly;searchTerm='';setTab('foods')} if(action==='goal')openGoalModal();if(action==='today'){selectedDate=todayKey();calendarMonth=dateFromKey(selectedDate).getMonth();calendarYear=dateFromKey(selectedDate).getFullYear();render();}if(action==='open-selected')setTab('today');if(action==='backup'){const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='nutritrack-backup-'+todayKey()+'.json';a.click();URL.revokeObjectURL(url);toast('Cópia de segurança exportada')}if(action==='about')toast('NutriTrack 3.0 · Bolacha & Lau')}
-  document.addEventListener('click',e=>{const nav=e.target.closest('[data-tab]');if(nav){setTab(nav.dataset.tab);return}const a=e.target.closest('[data-action]');if(a){handleAction(a.dataset.action);return}const fav=e.target.closest('[data-favorite]');if(fav){const f=state.foods.find(x=>x.id===fav.dataset.favorite);if(f){f.favorite=!f.favorite;persist();renderFoods();toast(f.favorite?'Adicionado aos favoritos':'Removido dos favoritos')}return}const ed=e.target.closest('[data-edit-entry]');if(ed){openLogModal(ed.dataset.editEntry);return}const del=e.target.closest('[data-delete-entry]');if(del){if(confirm('Queres eliminar este registo?')){state.entries=state.entries.filter(x=>x.id!==del.dataset.deleteEntry);save();toast('Registo eliminado')}return}const ef=e.target.closest('[data-edit-food]');if(ef){openFoodModal(ef.dataset.editFood);return}const df=e.target.closest('[data-delete-food]');if(df){if(confirm('Queres eliminar este alimento da biblioteca? Os registos antigos mantêm-se.')){state.foods=state.foods.filter(x=>x.id!==df.dataset.deleteFood);save();toast('Alimento eliminado')}return}const day=e.target.closest('[data-day]');if(day){selectedDate=day.dataset.day;render();return}const month=e.target.closest('[data-month]');if(month){calendarMonth+=Number(month.dataset.month);if(calendarMonth<0){calendarMonth=11;calendarYear--}if(calendarMonth>11){calendarMonth=0;calendarYear++}renderCalendar();return}const sw=e.target.closest('[data-stats-week]');if(sw){statsOffset=Math.min(0,statsOffset+Number(sw.dataset.statsWeek));renderStats();return}if(e.target.closest('[data-close]'))closeModal();});
-  $('#modalBackdrop').addEventListener('click',e=>{if(e.target.id==='modalBackdrop')closeModal()});
-  document.addEventListener('input',e=>{if(e.target.id==='foodSearch'){searchTerm=e.target.value;const pos=e.target.selectionStart;renderFoods();const x=$('#foodSearch');x.focus();x.setSelectionRange(pos,pos)}});
-  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
-  if('serviceWorker' in navigator && location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
-  persist();render();
+(()=>{'use strict';
+const KEY='nutritrack-v1',today=()=>new Date().toISOString().slice(0,10),uid=()=>Math.random().toString(36).slice(2)+Date.now().toString(36),$=s=>document.querySelector(s),fmt=n=>Math.round(Number(n)||0).toLocaleString('pt-PT'),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const defaultFoods=[
+{name:'Maçã',kcal:52,protein:.3,carbs:14,fat:.2,fiber:2.4,category:'Fruta'},{name:'Banana',kcal:89,protein:1.1,carbs:22.8,fat:.3,fiber:2.6,category:'Fruta'},{name:'Pão integral',kcal:247,protein:13,carbs:41,fat:4.2,fiber:7,category:'Cereais'},{name:'Iogurte natural',kcal:63,protein:5,carbs:7,fat:1.5,fiber:0,category:'Laticínios'},{name:'Salmão',kcal:208,protein:20,carbs:0,fat:13,fiber:0,category:'Peixe'},{name:'Batata cozida',kcal:87,protein:1.9,carbs:20.1,fat:.1,fiber:1.8,category:'Cereais'},{name:'Amêndoas',kcal:579,protein:21.2,carbs:21.6,fat:49.9,fiber:12.5,category:'Frutos secos'},{name:'Leite meio gordo',kcal:47,protein:3.4,carbs:4.8,fat:1.6,fiber:0,category:'Laticínios'}
+].map(x=>({...x,id:uid(),source:'generic',favorite:false}));
+let state=load(),tab='home',selected=today(),month=new Date(),foodFilter='all',search='',period='3m';
+function load(){try{let s=JSON.parse(localStorage.getItem(KEY));if(!s)return fresh();s.foods=Array.isArray(s.foods)?s.foods:defaultFoods;s.entries=Array.isArray(s.entries)?s.entries:[];s.weights=Array.isArray(s.weights)?s.weights:[];s.measures=Array.isArray(s.measures)?s.measures:[];s.steps=s.steps||{};s.water=s.water||{};s.meals=s.meals||[];s.profile=s.profile||{};s.goalCalories=s.goalCalories||2000;s.goalSteps=s.goalSteps||8000;s.goalProtein=s.goalProtein||140;s.goalCarbs=s.goalCarbs||220;s.goalFat=s.goalFat||65;return s}catch(e){return fresh()}}
+function fresh(){return {foods:defaultFoods,entries:[],weights:[],measures:[],steps:{},water:{},meals:[],profile:{},goalCalories:2000,goalSteps:8000,goalProtein:140,goalCarbs:220,goalFat:65}}
+function save(){localStorage.setItem(KEY,JSON.stringify(state));render()}
+function sum(date){let a=state.entries.filter(x=>x.date===date);return a.reduce((o,x)=>{o.kcal+=+x.kcal||0;o.p+=+x.protein||0;o.c+=+x.carbs||0;o.f+=+x.fat||0;return o},{kcal:0,p:0,c:0,f:0})}
+const mealNames={breakfast:'Pequeno-almoço',lunch:'Almoço',snack:'Lanche',dinner:'Jantar'};
+function water(date){return +state.water[date]||0}function steps(date){return +state.steps[date]||0}
+function toast(t){let x=$('#toast');x.textContent=t;x.style.display='block';clearTimeout(window._toast);window._toast=setTimeout(()=>x.style.display='none',2200)}
+function setTab(t){tab=t;document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));$('#screen-'+t).classList.add('active');document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===t));render()}
+function progressRing(val,goal,color){return `background:conic-gradient(${color} ${Math.min(100,goal?val/goal*100:0)}%,#f1eee9 0)`;}
+function render(){ $('#headerDate').textContent=new Date().toLocaleDateString('pt-PT',{weekday:'short',day:'numeric',month:'short'});home();food();calendar();progress();profile()}
+function home(){let s=sum(selected),goal=+state.goalCalories,remaining=goal-s.kcal,pct=goal?s.kcal/goal*100:0;let macro=(label,val,target,color)=>`<div class="macro"><div class="macro-ring" style="${progressRing(val,target,color)}"><b>${fmt(val)}g</b></div><strong>${label}</strong><small>de ${fmt(target)} g</small></div>`;
+let html=`<h1>Olá! 👋</h1><p class="desc">Um dia de cada vez. Vamos acompanhar o teu progresso.</p><div class="hero"><div class="hero-top"><span class="eyebrow">Resumo diário</span><span class="date-chip">${new Date(selected+'T12:00:00').toLocaleDateString('pt-PT',{day:'numeric',month:'short'})}</span></div><div class="hero-row"><div class="ring" style="--p:${Math.min(100,pct)}%"><div class="ring-inner"><b>${fmt(s.kcal)}</b><span>kcal consumidas</span></div></div><div><div class="hero-kcal">${fmt(Math.abs(remaining))} <small>kcal</small></div><div class="remaining">${remaining>=0?'restantes':'acima do objetivo'}<br><b>${Math.round(pct)}%</b> do objetivo</div></div></div><div class="bar"><i style="width:${Math.min(100,pct)}%;background:${remaining<0?'#c9534b':'#d97935'}"></i></div><div class="hero-foot"><span>0 kcal</span><span>Objetivo ${fmt(goal)} kcal</span></div></div>
+<div class="macro-grid">${macro('Proteína',s.p,state.goalProtein,'#e99048')}${macro('Hidratos',s.c,state.goalCarbs,'#f0c45e')}${macro('Gordura',s.f,state.goalFat,'#e98b7d')}</div>
+<div class="section-head"><h2>Atividade diária</h2><button class="link" data-action="profile">Definir objetivos</button></div><div class="grid2"><div class="metric"><div class="metric-label">💧 Água</div><div class="metric-value">${(water(selected)/1000).toFixed(1).replace('.',',')} L</div><div class="metric-foot">Objetivo ${state.profile.waterGoal||2500} ml</div><button class="btn soft small" data-action="water">+ 250 ml</button></div><div class="metric"><div class="metric-label">👟 Passos</div><div class="metric-value">${fmt(steps(selected))}</div><div class="metric-foot">Objetivo ${fmt(state.goalSteps)}</div><button class="btn soft small" data-action="steps">Registar</button></div></div>
+<div class="section-head"><h2>As tuas refeições</h2><button class="link" data-tab="food">Ver biblioteca</button></div>`;
+Object.entries(mealNames).forEach(([id,name])=>{let arr=state.entries.filter(x=>x.date===selected&&x.meal===id),k=arr.reduce((a,x)=>a+(+x.kcal||0),0);html+=`<div class="meal"><div class="meal-head"><span class="meal-title">${name}</span><span class="meal-kcal">${fmt(k)} kcal</span></div>${arr.length?arr.map(x=>`<div class="food-row"><span>${esc(x.name)}<small>${fmt(x.grams)} g</small></span><b>${fmt(x.kcal)} kcal</b></div>`).join(''):'<div class="tiny">Ainda não adicionaste alimentos.</div>'}<button class="link" data-action="add" data-meal="${id}">＋ Adicionar alimento</button></div>`});
+$('#screen-home').innerHTML=html}
+function food(){let arr=state.foods.filter(f=>(foodFilter==='fav'?f.favorite:foodFilter==='recent'?state.entries.some(e=>e.foodId===f.id):true)&&(!search||f.name.toLowerCase().includes(search.toLowerCase())));$('#screen-food').innerHTML=`<h1>Alimentação</h1><p class="desc">Regista refeições e gere a tua biblioteca.</p><div class="actions"><button class="btn" data-action="add">＋ Registar alimento</button><button class="btn secondary" data-action="newfood">Criar alimento</button><button class="btn secondary" data-action="meal-save">Guardar refeição</button></div><input class="search" id="foodSearch" placeholder="Pesquisar alimentos..." value="${esc(search)}"><div class="tabs"><button data-filter="all" class="${foodFilter==='all'?'active':''}">Todos</button><button data-filter="fav" class="${foodFilter==='fav'?'active':''}">Favoritos</button><button data-filter="recent" class="${foodFilter==='recent'?'active':''}">Recentes</button></div><div class="tiny" style="margin:8px 2px 10px">Biblioteca geral, produtos guardados e alimentos pessoais</div>${arr.length?arr.map(f=>`<div class="food-card"><div class="food-info"><strong>${esc(f.name)}</strong><small>${esc(f.source==='off'?'Open Food Facts':f.source==='personal'?'Pessoal':'Genérico')} · P ${f.protein||0}g · HC ${f.carbs||0}g · G ${f.fat||0}g / 100 g</small></div><span class="kcal">${fmt(f.kcal)} kcal</span><button class="round" data-fav="${f.id}" title="Favorito">${f.favorite?'★':'☆'}</button><button class="round" data-addfood="${f.id}">＋</button></div>`).join(''):'<div class="empty">Não foram encontrados alimentos.</div>'}<div class="section-head"><h2>Refeições guardadas</h2><span class="tiny">${state.meals.length} guardadas</span></div>${state.meals.length?state.meals.map(m=>`<div class="food-card"><div class="food-info"><strong>${esc(m.name)}</strong><small>${m.items.length} alimentos · ${fmt(m.kcal)} kcal por refeição</small></div><button class="btn soft small" data-usemeal="${m.id}">Adicionar</button></div>`).join(''):'<div class="card tiny">Ainda não guardaste refeições. Regista os alimentos de uma refeição e guarda-a para reutilizares mais tarde.</div>'}<div class="card" style="margin-top:15px"><h3>Pesquisa de produtos</h3><p class="tiny">Com ligação à Internet podes pesquisar produtos na base Open Food Facts. Os produtos adicionados ficam guardados neste dispositivo para utilização offline.</p><button class="btn secondary full" data-action="off-search">Pesquisar Open Food Facts</button></div>`}
+function calendar(){let y=month.getFullYear(),m=month.getMonth(),first=new Date(y,m,1),start=(first.getDay()+6)%7,days=new Date(y,m+1,0).getDate(),cells='';['S','T','Q','Q','S','S','D'].forEach(d=>cells+=`<div class="wd">${d}</div>`);for(let i=0;i<start;i++)cells+=`<button class="day muted" disabled></button>`;for(let d=1;d<=days;d++){let key=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`,has=state.entries.some(e=>e.date===key),sel=key===selected;cells+=`<button class="day ${sel?'selected':''} ${key===today()?'today':''}" data-date="${key}">${d}<i class="dot ${has?'done':''}"></i></button>`}$('#screen-calendar').innerHTML=`<h1>Calendário</h1><p class="desc">Consulta os teus registos dia a dia.</p><div class="calendar"><div class="cal-head"><button class="round" data-month="-1">‹</button><strong>${month.toLocaleDateString('pt-PT',{month:'long',year:'numeric'})}</strong><button class="round" data-month="1">›</button></div><div class="cal-grid">${cells}</div></div><div class="section-head"><h2>${new Date(selected+'T12:00:00').toLocaleDateString('pt-PT',{weekday:'long',day:'numeric',month:'long'})}</h2><button class="link" data-action="today">Hoje</button></div><div class="grid2"><div class="metric"><div class="metric-label">Calorias</div><div class="metric-value">${fmt(sum(selected).kcal)}</div><div class="metric-foot">de ${fmt(state.goalCalories)} kcal</div></div><div class="metric"><div class="metric-label">Água</div><div class="metric-value">${fmt(water(selected))} ml</div><div class="metric-foot">registados</div></div><div class="metric"><div class="metric-label">Passos</div><div class="metric-value">${fmt(steps(selected))}</div><div class="metric-foot">registados</div></div><div class="metric"><div class="metric-label">Alimentos</div><div class="metric-value">${state.entries.filter(e=>e.date===selected).length}</div><div class="metric-foot">registos</div></div></div>`}
+function progress(){let ws=[...state.weights].sort((a,b)=>a.date.localeCompare(b.date)),last=ws.at(-1),first=ws[0],diff=last&&first?last.kg-first.kg:0;let pts=ws.slice(-12);let chart='';if(pts.length>1){let min=Math.min(...pts.map(x=>x.kg))-.5,max=Math.max(...pts.map(x=>x.kg))+.5,coords=pts.map((p,i)=>`${20+i*260/(pts.length-1)},${160-(p.kg-min)/(max-min)*125}`).join(' ');chart=`<svg class="chart" viewBox="0 0 300 190" role="img" aria-label="Gráfico da evolução do peso"><path d="M20 160 H280" stroke="#eee7de" fill="none"/><polyline points="${coords}" fill="none" stroke="#e99048" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>${pts.map((p,i)=>{let xy=coords.split(' ')[i].split(',');return `<circle cx="${xy[0]}" cy="${xy[1]}" r="4" fill="#fff" stroke="#e99048" stroke-width="2"><title>${p.kg} kg · ${p.date}</title></circle>`}).join('')}</svg>`}else chart='<div class="empty">Regista pelo menos dois pesos para visualizar a evolução.</div>';
+$('#screen-progress').innerHTML=`<h1>Progresso</h1><p class="desc">Acompanha a evolução do teu corpo.</p><div class="tabs">${[['1m','1 mês'],['3m','3 meses'],['6m','6 meses'],['1y','1 ano']].map(([v,l])=>`<button data-period="${v}" class="${period===v?'active':''}">${l}</button>`).join('')}</div><div class="card"><div class="section-head" style="margin:0 0 10px"><h2>Peso corporal</h2><button class="btn small" data-action="weight">＋ Registar</button></div><div class="grid2"><div><span class="tiny">Peso atual</span><div class="metric-value">${last?last.kg.toFixed(1).replace('.',',')+' kg':'—'}</div></div><div><span class="tiny">Variação total</span><div class="metric-value">${first&&last?(diff>0?'+':'')+diff.toFixed(1).replace('.',',')+' kg':'—'}</div></div></div>${chart}<div class="tiny">${ws.length} registos de peso</div></div><div class="section-head"><h2>Medidas corporais</h2><button class="btn small" data-action="measure">＋ Registar</button></div><div class="card"><p class="tiny">Sugestão: regista as medidas de duas em duas semanas.</p>${['Cintura','Abdómen','Peito','Braço','Coxa','Anca'].map(n=>{let x=[...state.measures].reverse().find(m=>m.name===n);return `<div class="food-row"><span>${n}<small>${x?x.date:'Sem registos'}</small></span><b>${x?x.value+' cm':'—'}</b></div>`}).join('')}</div><div class="card"><h3>Histórico de peso</h3>${ws.slice().reverse().slice(0,8).map(x=>`<div class="food-row"><span>${x.date}</span><b>${x.kg} kg</b></div>`).join('')||'<div class="tiny">Ainda não existem registos.</div>'}</div>`}
+function profile(){let p=state.profile;$('#screen-profile').innerHTML=`<h1>Perfil</h1><p class="desc">Os teus dados e objetivos.</p><div class="card profile-logo"><img src="icon.png" alt="NutriTrack"><div><span class="pill">BOLACHA & LAU</span><h2 style="margin-top:6px">NutriTrack 4.0</h2><p>Pequenos passos, grandes resultados.</p></div></div><div class="section-head"><h2>Dados pessoais</h2><button class="link" data-action="edit-profile">Editar</button></div><div class="card"><div class="food-row"><span>Idade</span><b>${p.age||'—'} anos</b></div><div class="food-row"><span>Parâmetro da fórmula</span><b>${p.sex==='male'?'Masculino':p.sex==='female'?'Feminino':'—'}</b></div><div class="food-row"><span>Altura</span><b>${p.height||'—'} cm</b></div><div class="food-row"><span>Peso atual</span><b>${p.weight||'—'} kg</b></div><div class="food-row"><span>Objetivo</span><b>${esc(p.goal||'Por definir')}</b></div></div><div class="section-head"><h2>Objetivos nutricionais</h2><button class="link" data-action="edit-goals">Editar</button></div><div class="card"><div class="food-row"><span>Calorias</span><b>${fmt(state.goalCalories)} kcal</b></div><div class="food-row"><span>Proteína</span><b>${fmt(state.goalProtein)} g</b></div><div class="food-row"><span>Hidratos</span><b>${fmt(state.goalCarbs)} g</b></div><div class="food-row"><span>Gordura</span><b>${fmt(state.goalFat)} g</b></div><div class="food-row"><span>Passos</span><b>${fmt(state.goalSteps)}</b></div></div><div class="section-head"><h2>Dados e cópias de segurança</h2></div><div class="card actions"><button class="btn secondary" data-action="export">Exportar dados</button><button class="btn secondary" data-action="import">Importar cópia</button><input type="file" id="importFile" accept="application/json" hidden></div><p class="tiny">Os dados ficam guardados neste dispositivo. Exporta uma cópia regularmente. Criar uma conta não ativa sincronização na nuvem nesta versão.</p>`}
+function openModal(content){$('#modal').innerHTML=content;$('#modalBack').classList.add('show')}function closeModal(){$('#modalBack').classList.remove('show')}
+function foodForm(){openModal(`<div class="modal-head"><h2>Novo alimento</h2><button class="close">×</button></div><form id="newFood"><div class="field"><label>Nome</label><input name="name" required></div><div class="row"><div class="field"><label>kcal / 100 g</label><input name="kcal" type="number" min="0" required></div><div class="field"><label>Proteína (g)</label><input name="protein" type="number" step=".1" min="0"></div><div class="field"><label>Hidratos (g)</label><input name="carbs" type="number" step=".1" min="0"></div><div class="field"><label>Gordura (g)</label><input name="fat" type="number" step=".1" min="0"></div></div><button class="btn full">Guardar alimento</button></form>`)}
+function logForm(foodId=null,meal='breakfast'){let opts=state.foods.map(f=>`<option value="${f.id}" ${f.id===foodId?'selected':''}>${esc(f.name)} · ${fmt(f.kcal)} kcal/100 g</option>`).join('');openModal(`<div class="modal-head"><h2>Adicionar ao diário</h2><button class="close">×</button></div><form id="logForm"><div class="field"><label>Alimento</label><select name="food" required>${opts}</select></div><div class="row"><div class="field"><label>Quantidade (g)</label><input name="grams" type="number" min="1" value="100" required></div><div class="field"><label>Refeição</label><select name="meal">${Object.entries(mealNames).map(([k,v])=>`<option value="${k}" ${meal===k?'selected':''}>${v}</option>`).join('')}</select></div></div><div class="field"><label>Data</label><input name="date" type="date" value="${selected}" required></div><button class="btn full">Adicionar ao diário</button></form>`)}
+function profileForm(){let p=state.profile;openModal(`<div class="modal-head"><h2>Dados pessoais</h2><button class="close">×</button></div><form id="profileForm"><div class="row"><div class="field"><label>Idade</label><input name="age" type="number" min="14" max="100" value="${p.age||''}"></div><div class="field"><label>Altura (cm)</label><input name="height" type="number" min="100" max="230" value="${p.height||''}"></div></div><div class="field"><label>Sexo utilizado na fórmula</label><select name="sex"><option value="">Selecionar</option><option value="male" ${p.sex==='male'?'selected':''}>Masculino (+5)</option><option value="female" ${p.sex==='female'?'selected':''}>Feminino (−161)</option></select></div><div class="row"><div class="field"><label>Peso atual (kg)</label><input name="weight" type="number" step=".1" value="${p.weight||''}"></div><div class="field"><label>Peso pretendido (kg)</label><input name="targetWeight" type="number" step=".1" value="${p.targetWeight||''}"></div></div><div class="field"><label>Objetivo físico</label><select name="goal"><option>Manter peso</option><option>Perder peso</option><option>Aumentar peso</option><option>Ganhar massa muscular</option></select></div><div class="row"><div class="field"><label>Treinos por semana</label><input name="workouts" type="number" min="0" max="14" value="${p.workouts||0}"></div><div class="field"><label>Duração média (min)</label><input name="duration" type="number" min="0" value="${p.duration||0}"></div></div><div class="field"><label>Atividade geral</label><select name="activity"><option value="1.2">Sedentária</option><option value="1.375">Leve</option><option value="1.55">Moderada</option><option value="1.725">Elevada</option></select></div><button class="btn full">Guardar perfil e calcular</button></form>`)}
+function goalsForm(){openModal(`<div class="modal-head"><h2>Objetivos diários</h2><button class="close">×</button></div><form id="goalsForm">${[['goalCalories','Calorias (kcal)'],['goalProtein','Proteína (g)'],['goalCarbs','Hidratos (g)'],['goalFat','Gordura (g)'],['goalSteps','Passos']].map(([k,l])=>`<div class="field"><label>${l}</label><input name="${k}" type="number" min="0" value="${state[k]}"></div>`).join('')}<button class="btn full">Guardar objetivos</button></form>`)}
+function saveMealForm(){let day=state.entries.filter(e=>e.date===selected);openModal(`<div class="modal-head"><h2>Guardar refeição</h2><button class="close">×</button></div>${day.length?`<p class="desc">Serão guardados os alimentos registados em ${new Date(selected+'T12:00:00').toLocaleDateString('pt-PT')}.</p><form id="saveMealForm"><div class="field"><label>Nome da refeição</label><input name="name" placeholder="Ex.: Pequeno-almoço habitual" required></div><div class="field"><label>Grupo de refeição</label><select name="meal">${Object.entries(mealNames).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></div><button class="btn full">Guardar para reutilizar</button></form>`:'<div class="empty">Ainda não existem alimentos registados nesta data. Adiciona primeiro os alimentos ao diário.</div>'}`)}
+function measureForm(){openModal(`<div class="modal-head"><h2>Registar medida</h2><button class="close">×</button></div><form id="measureForm"><div class="field"><label>Medida</label><select name="name">${['Cintura','Abdómen','Peito','Braço','Coxa','Anca'].map(x=>`<option>${x}</option>`).join('')}</select></div><div class="field"><label>Valor (cm)</label><input name="value" type="number" step=".1" min="1" required></div><div class="field"><label>Data</label><input name="date" type="date" value="${today()}"></div><button class="btn full">Guardar medida</button></form>`)}
+function calcMetabolic(){let p=state.profile;if(!p.age||!p.height||!p.weight||!p.sex)return null;let tmb=10*p.weight+6.25*p.height-5*p.age+(p.sex==='male'?5:-161),factor=+(p.activity||1.2),tdee=tmb*factor;return {tmb:Math.round(tmb),tdee:Math.round(tdee)}}
+document.addEventListener('click',e=>{let n=e.target.closest('[data-tab]');if(n){setTab(n.dataset.tab);return}let f=e.target.closest('[data-filter]');if(f){foodFilter=f.dataset.filter;food();return}let d=e.target.closest('[data-date]');if(d){selected=d.dataset.date;render();return}let m=e.target.closest('[data-month]');if(m){month.setMonth(month.getMonth()+Number(m.dataset.month));calendar();return}let p=e.target.closest('[data-period]');if(p){period=p.dataset.period;progress();return}let fav=e.target.closest('[data-fav]');if(fav){let x=state.foods.find(x=>x.id===fav.dataset.fav);x.favorite=!x.favorite;save();return}let add=e.target.closest('[data-addfood]');if(add){logForm(add.dataset.addfood);return}let act=e.target.closest('[data-action]');if(act){let a=act.dataset.action;if(a==='add')logForm(null,act.dataset.meal||'breakfast');if(a==='newfood')foodForm();if(a==='weight')openModal(`<div class="modal-head"><h2>Registar peso</h2><button class="close">×</button></div><form id="weightForm"><div class="field"><label>Peso (kg)</label><input name="kg" type="number" step=".1" min="20" max="350" required></div><div class="field"><label>Data</label><input name="date" type="date" value="${today()}"></div><button class="btn full">Guardar peso</button></form>`);if(a==='measure')measureForm();if(a==='steps'||a==='water')openModal(`<div class="modal-head"><h2>${a==='steps'?'Registar passos':'Registar água'}</h2><button class="close">×</button></div><form id="simpleForm"><div class="field"><label>${a==='steps'?'Número de passos':'Quantidade (ml)'}</label><input name="value" type="number" min="0" value="${a==='water'?250:steps(selected)}" required></div><button class="btn full">Guardar</button></form>`);if(a==='edit-profile')profileForm();if(a==='edit-goals')goalsForm();if(a==='profile')setTab('profile');if(a==='today'){selected=today();render()}if(a==='export'){let blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),u=URL.createObjectURL(blob),link=document.createElement('a');link.href=u;link.download='nutritrack-backup-'+today()+'.json';link.click();URL.revokeObjectURL(u);toast('Cópia exportada')}if(a==='import')$('#importFile').click();if(a==='meal-save')saveMealForm();if(a==='off-search')openModal(`<div class="modal-head"><h2>Open Food Facts</h2><button class="close">×</button></div><p class="desc">Pesquisa produtos comerciais e guarda-os na biblioteca local.</p><form id="offForm"><div class="field"><label>Nome do produto</label><input name="q" placeholder="Ex.: iogurte natural" required></div><button class="btn full">Pesquisar produtos</button></form><div id="offResults"></div>`)}});
+document.addEventListener('submit',async e=>{e.preventDefault();let form=e.target,fd=new FormData(form);if(form.id==='newFood'){let x=Object.fromEntries(fd);state.foods.unshift({id:uid(),...x,kcal:+x.kcal,protein:+x.protein||0,carbs:+x.carbs||0,fat:+x.fat||0,source:'personal',favorite:false});save();closeModal();toast('Alimento guardado')}if(form.id==='logForm'){let f=state.foods.find(x=>x.id===fd.get('food')),g=+fd.get('grams'),factor=g/100;state.entries.push({id:uid(),foodId:f.id,name:f.name,grams:g,meal:fd.get('meal'),date:fd.get('date'),kcal:f.kcal*factor,protein:(f.protein||0)*factor,carbs:(f.carbs||0)*factor,fat:(f.fat||0)*factor});selected=fd.get('date');save();closeModal();toast('Refeição atualizada')}if(form.id==='saveMealForm'){let group=fd.get('meal'),items=state.entries.filter(x=>x.date===selected&&x.meal===group).map(x=>({...x,date:undefined,id:undefined}));if(!items.length){toast('Não há alimentos nessa refeição');return}state.meals.unshift({id:uid(),name:fd.get('name'),items,kcal:items.reduce((a,x)=>a+(+x.kcal||0),0),created:today()});save();closeModal();toast('Refeição guardada')}if(form.id==='weightForm'){state.weights.push({date:fd.get('date'),kg:+fd.get('kg')});state.weights.sort((a,b)=>a.date.localeCompare(b.date));save();closeModal();toast('Peso guardado')}if(form.id==='measureForm'){state.measures.push({name:fd.get('name'),value:+fd.get('value'),date:fd.get('date')});save();closeModal();toast('Medida guardada')}if(form.id==='simpleForm'){if(form.querySelector('input').name==='value'&&$('#modal h2').textContent.includes('passos'))state.steps[selected]=+fd.get('value');else state.water[selected]=water(selected)+(+fd.get('value'));save();closeModal();toast('Registo guardado')}if(form.id==='profileForm'){state.profile=Object.fromEntries(fd);let c=calcMetabolic();if(c){let proposed=Math.round(c.tdee);if(confirm(`Estimativa: TMB ${c.tmb} kcal · TDEE ${c.tdee} kcal. Pretendes usar ${proposed} kcal como objetivo calórico?`))state.goalCalories=proposed;}save();closeModal();toast('Perfil guardado')}if(form.id==='goalsForm'){for(let k of ['goalCalories','goalProtein','goalCarbs','goalFat','goalSteps'])state[k]=+fd.get(k)||0;save();closeModal();toast('Objetivos guardados')}if(form.id==='offForm'){let q=fd.get('q'),box=$('#offResults');box.innerHTML='<p class="tiny">A pesquisar…</p>';try{let r=await fetch('https://world.openfoodfacts.org/cgi/search.pl?search_terms='+encodeURIComponent(q)+'&search_simple=1&action=process&json=1&page_size=8');let data=await r.json();box.innerHTML=(data.products||[]).filter(p=>p.product_name&&p.nutriments).map((p,i)=>{let n=p.nutriments;return `<div class="food-card"><div class="food-info"><strong>${esc(p.product_name)}</strong><small>${esc(p.brands||'Produto')} · ${fmt(n['proteins_100g'])}g proteína</small></div><span class="kcal">${fmt(n['energy-kcal_100g'])} kcal</span><button class="round" data-off-add="${i}">＋</button></div>`}).join('')||'<p class="tiny">Não foram encontrados resultados.</p>';window.offProducts=data.products||[]}catch(err){box.innerHTML='<p class="tiny">Não foi possível pesquisar. Verifica a ligação à Internet.</p>'}}});
+document.addEventListener('click',e=>{if(e.target.closest('.close'))closeModal();let use=e.target.closest('[data-usemeal]');if(use){let meal=state.meals.find(x=>x.id===use.dataset.usemeal);if(meal){meal.items.forEach(x=>state.entries.push({...x,id:uid(),date:selected}));save();toast('Refeição adicionada ao diário')}return}let o=e.target.closest('[data-off-add]');if(o){let p=window.offProducts[+o.dataset.offAdd],n=p.nutriments||{};state.foods.unshift({id:uid(),name:p.product_name||'Produto',kcal:+n['energy-kcal_100g']||0,protein:+n.proteins_100g||0,carbs:+n.carbohydrates_100g||0,fat:+n.fat_100g||0,fiber:+n.fiber_100g||0,source:'off',favorite:false});save();closeModal();toast('Produto guardado para utilização offline')}});
+$('#modalBack').addEventListener('click',e=>{if(e.target.id==='modalBack')closeModal()});
+document.addEventListener('input',e=>{if(e.target.id==='foodSearch'){search=e.target.value;let pos=e.target.selectionStart;food();let x=$('#foodSearch');x.focus();x.setSelectionRange(pos,pos)}});
+$('#importFile').addEventListener('change',async e=>{let file=e.target.files[0];if(!file)return;try{let imported=JSON.parse(await file.text());if(!imported||!Array.isArray(imported.foods)||!Array.isArray(imported.entries))throw Error();if(confirm('A importação irá substituir os dados atuais deste dispositivo. Tens uma cópia de segurança?')){state=imported;localStorage.setItem(KEY,JSON.stringify(state));render();toast('Dados importados')}}catch(err){alert('Não foi possível ler esta cópia de segurança.')}e.target.value=''});
+function migrate(){let p=state.profile||{};state.measures=state.measures||[];state.meals=state.meals||[];state.foods=state.foods.map(f=>({...f,source:f.source||'generic'}));state.entries=state.entries.map(e=>({...e,protein:e.protein||0,carbs:e.carbs||0,fat:e.fat||0}));}
+migrate();render();
+if('serviceWorker'in navigator&&location.protocol.startsWith('http'))addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 })();
 </script>
-</body>
-</html>
+</body></html>
