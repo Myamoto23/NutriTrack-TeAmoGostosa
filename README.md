@@ -1,37 +1,20 @@
-# NutriTrack — primeira versão
+# NutriTrack 2.0
 
-Aplicação web progressiva (PWA), optimizada para iPhone e escrita em português de Portugal. Não precisa de conta nem de servidor de dados: os alimentos, refeições, passos e objectivos ficam guardados localmente no dispositivo através do armazenamento do navegador.
+Aplicação web progressiva (PWA) para diário alimentar e acompanhamento pessoal.
 
-## Funcionalidades
+## Novidades
+- Macronutrientes por alimento: proteína, hidratos de carbono, gordura e fibra por 100 g.
+- Cálculo proporcional dos macronutrientes em cada registo alimentar.
+- Favoritos na biblioteca de alimentos.
+- Registo diário de água.
+- Registo de peso corporal por data.
+- Calendário com resumo de calorias, passos, água e peso.
+- Identidade visual Bolacha & Lau, com mascote e cores quentes.
 
-- Painel diário com calorias consumidas, restantes e progresso do objectivo.
-- Biblioteca de alimentos, com criação, edição e remoção de alimentos e calorias por 100 g.
-- Diário por refeição: pequeno-almoço, almoço, lanche e jantar.
-- Cálculo automático: calorias por 100 g × quantidade em gramas ÷ 100.
-- Edição e remoção de registos alimentares.
-- Registo manual de passos por dia.
-- Calendário mensal com indicadores dos dias registados.
-- Estatísticas semanais de calorias e passos.
-- Objectivos diários editáveis.
-- Funciona offline depois da primeira abertura num endereço HTTPS.
+## Atualizar no GitHub Pages
+Carrega os cinco ficheiros desta pasta para a raiz do repositório e confirma a substituição. Mantém o mesmo repositório e o mesmo endereço.
 
-## Instalar no iPhone
+## Preservação dos dados
+A versão 2.0 mantém a chave de armazenamento local `nutritrack-v1` e acrescenta novos campos sem apagar alimentos, refeições, passos ou objetivos existentes. Os registos alimentares antigos continuam disponíveis; como não tinham informação de macronutrientes, esses valores antigos aparecem como não registados/zero e não são inventados.
 
-1. Publica a pasta `NutriTrack` num alojamento HTTPS (por exemplo, GitHub Pages).
-2. Abre o endereço publicado no Safari do iPhone.
-3. Toca em Partilhar e escolhe **Adicionar ao ecrã principal**.
-4. Confirma o nome NutriTrack. A app passa a abrir numa janela própria.
-
-## Testar no computador
-
-Abre `index.html` num navegador moderno. Para testar a instalação PWA e o modo offline, usa um servidor local ou alojamento HTTPS; os service workers não funcionam com `file://`.
-
-## Dados e privacidade
-
-Os dados são guardados no armazenamento local do navegador. Não existe sincronização entre dispositivos nem cópia de segurança automática nesta versão. Limpar os dados do Safari pode apagar os registos. Exportação/importação e sincronização poderão ser acrescentadas numa versão seguinte.
-
-## Notas
-
-- O objectivo inicial de 2 400 kcal e 10 000 passos é apenas um valor de demonstração e pode ser alterado em **Objectivos**.
-- Os alimentos de exemplo têm valores aproximados. Confirma sempre os valores do rótulo, especialmente para alimentos crus e cozinhados.
-- Os passos são introduzidos manualmente. A integração com Apple Saúde não está incluída nesta primeira versão.
+Os dados continuam guardados localmente no navegador/dispositivo. Não existe ainda sincronização entre dispositivos nem cópia de segurança na nuvem. Antes de atualizar, recomenda-se exportar/guardar uma cópia dos dados se a aplicação já tiver registos importantes.
