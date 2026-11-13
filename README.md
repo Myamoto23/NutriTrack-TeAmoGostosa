@@ -30,3 +30,7 @@ Os dados continuam guardados localmente no navegador/dispositivo. Não existe ai
 
 ## NutriTrack 2.3
 Atualização visual inspirada no mockup aprovado: tons quentes, navegação com cinco separadores, cartões arredondados, botões mais interativos e mascote Bolacha & Lau. Mantém a chave local `nutritrack-v1` para preservar os registos no mesmo navegador/dispositivo.
+
+
+## NutriTrack 3.0
+Reformulação visual com painel diário, indicadores circulares de calorias e macronutrientes, alimentação com favoritos, progresso semanal com gráfico de peso, calendário e perfil. Os registos continuam a usar a chave local `nutritrack-v1`, preservando os dados existentes no dispositivo.
