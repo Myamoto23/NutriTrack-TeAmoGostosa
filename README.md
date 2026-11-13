@@ -26,3 +26,7 @@ Os dados continuam guardados localmente no navegador/dispositivo. Não existe ai
 - Gráfico semanal de evolução do peso.
 - Exportação de cópia de segurança em JSON.
 - Mantém a chave de armazenamento local `nutritrack-v1` para preservar os registos existentes.
+
+
+## NutriTrack 2.3
+Atualização visual inspirada no mockup aprovado: tons quentes, navegação com cinco separadores, cartões arredondados, botões mais interativos e mascote Bolacha & Lau. Mantém a chave local `nutritrack-v1` para preservar os registos no mesmo navegador/dispositivo.
